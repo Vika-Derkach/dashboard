@@ -14,8 +14,6 @@ const Vacancies = () => {
     dispatch(fetchVacancies());
   }, [dispatch]);
 
-  console.log(vacancies);
-
   return (
     <div>
       {redirectToAddVacPage && <Redirect to="/vacancy" />}
@@ -33,28 +31,36 @@ const Vacancies = () => {
           <div>loading</div>
         ) : (
           <>
-            {vacancies?.map((vac) => {
-              return (
-                <Card variant="outlined" key={vac.id}>
-                  <div> {vac.name}</div>
-                  <div> {vac.city}</div>
-                  {typeof vac.price === "object" ? (
-                    <>
-                      {vac.price.from} - {vac.price.to}
-                    </>
-                  ) : (
-                    <div> {vac.price}</div>
-                  )}
-                  <ButtonGroup
-                    variant="outlined"
-                    aria-label="outlined button group"
-                  >
-                    <Button>Редактировать</Button>
-                    <Button>Удалить</Button>
-                  </ButtonGroup>
-                </Card>
-              );
-            })}
+            {!!vacancies.length &&
+              vacancies.map((vac) => {
+                return (
+                  <Card variant="outlined" key={vac.id}>
+                    <div> {vac.name}</div>
+                    <div>
+                      {typeof vac.price === "object" ? (
+                        <>
+                          {vac.price.from} - {vac.price.to}
+                        </>
+                      ) : (
+                        <> {vac.price}</>
+                      )}{" "}
+                      грн {vac.comment && <>· {vac.comment}</>}
+                    </div>
+                    <div>
+                      {vac.city}
+                      {vac.address && <span>, {vac.address}</span>}
+                    </div>
+
+                    <ButtonGroup
+                      variant="outlined"
+                      aria-label="outlined button group"
+                    >
+                      <Button>Редактировать</Button>
+                      <Button>Удалить</Button>
+                    </ButtonGroup>
+                  </Card>
+                );
+              })}
             {error && <div>Something went wrong</div>}
           </>
         )}

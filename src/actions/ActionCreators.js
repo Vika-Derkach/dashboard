@@ -1,19 +1,20 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { vacanciesSlice } from "../reducers/VacanciesSlice";
 import { vacancySlice } from "../reducers/VacancySlice";
 
-// export const fetchVacancies = createAsyncThunk(
-//   "vacancies/fetchAll",
-//   async (_, thunkAPI) => {
-//     try {
-//       const response = await axios.get("http://localhost:3001/vacancies");
-//       console.log("response11", response);
-//       return response.data;
-//     } catch (e) {
-//       return thunkAPI.rejectWithValue("Inposible to load vacancies");
-//     }
-//   }
-// );
+export const fetchCities = createAsyncThunk(
+  "cities/fetchAll",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get("http://localhost:3001/cities");
+      console.log("cities", response);
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue("Inposible to load cities");
+    }
+  }
+);
 export const fetchVacancies = () => async (dispatch) => {
   try {
     dispatch(vacanciesSlice.actions.vacanciesFetching());
@@ -26,7 +27,6 @@ export const fetchVacancies = () => async (dispatch) => {
 
 export const fetchCreateVacancy = (vacancy) => async (dispatch) => {
   try {
-    console.log(vacancy, "vacancy action");
     const response = await axios.post("http://localhost:3001/vacancy", {
       vacancy,
     });

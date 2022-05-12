@@ -40,8 +40,8 @@ const FormSchema = yup.object().shape({
     switch (typeof value) {
       case "object":
         return yup.object().shape({
-          from: yup.string(),
-          to: yup.string(),
+          from: yup.string().nullable(),
+          to: yup.string().nullable(),
         }); // schema for object
       case "number":
         return yup.number(); // schema for number
@@ -49,7 +49,7 @@ const FormSchema = yup.object().shape({
         return yup.string(); // schema for string
 
       default:
-        return yup.mixed(); // here you can decide what is the default
+        return yup.mixed().nullable(); // here you can decide what is the default
     }
   }),
 });
@@ -61,6 +61,7 @@ const Form = () => {
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
   const dispatch = useDispatch();
+  const [openedItem, setOpenedItem] = useState("OneWage");
 
   const {
     register,
@@ -248,6 +249,11 @@ const Form = () => {
             onChange={handleIsWithoutWageChange}
             checked={isWithoutWage}
           />
+          {errors.price && (
+            <span role="alert" className="errorMessage">
+              {errors.price.message}
+            </span>
+          )}
         </RadioGroup>
         <div className="label-wrapper">
           <label>Комментарий к зарплате</label>
