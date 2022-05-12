@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
-import { fetchCreateVacancy } from "../../actions/ActionCreators";
+import { createNewVacancy } from "../../actions/ActionCreators";
 import { AutocompleteCity } from "../../components";
 import "./Form.css";
 
@@ -76,7 +76,7 @@ const Form = () => {
 
   const onSubmit = async (formData) => {
     try {
-      dispatch(fetchCreateVacancy(formData));
+      dispatch(createNewVacancy(formData));
       console.log(formData);
 
       reset();

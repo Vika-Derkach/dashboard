@@ -8,6 +8,11 @@ export const vacancySlice = createSlice({
     createVacancy(state, action) {
       state.vacancies = [...state.vacancies, { ...action.payload }];
     },
+    deletingVacancy(state, action) {
+      state.vacancies = state.vacancies.filter(
+        (vac) => vac.id !== action.vac.id
+      );
+    },
   },
 });
 

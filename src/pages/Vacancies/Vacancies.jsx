@@ -2,7 +2,7 @@ import { Button, ButtonGroup, Card, Container } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { fetchVacancies } from "../../actions/ActionCreators";
+import { deleteVacancy, fetchVacancies } from "../../actions/ActionCreators";
 
 const Vacancies = () => {
   const [redirectToAddVacPage, setRedirectToAddVacPage] = useState(false);
@@ -14,6 +14,7 @@ const Vacancies = () => {
     dispatch(fetchVacancies());
   }, [dispatch]);
 
+  console.log(vacancies);
   return (
     <div>
       {redirectToAddVacPage && <Redirect to="/vacancy" />}
@@ -56,7 +57,9 @@ const Vacancies = () => {
                       aria-label="outlined button group"
                     >
                       <Button>Редактировать</Button>
-                      <Button>Удалить</Button>
+                      <Button onClick={() => dispatch(deleteVacancy(vac))}>
+                        Удалить
+                      </Button>
                     </ButtonGroup>
                   </Card>
                 );
