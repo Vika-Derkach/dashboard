@@ -1,29 +1,63 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import ClearIcon from "@mui/icons-material/Clear";
 import {
   Button,
   FormControl,
   FormControlLabel,
   FormLabel,
+  IconButton,
   Radio,
   RadioGroup,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import "./Form.css";
 
 const FormSchema = yup.object().shape({
   name: yup
     .string()
+    .required("Enter a name")
     .min(2, "Must be bigger than one letter")
-    .max(20, "Must be shorted")
-    .required("Enter a name"),
-  city: yup.string().min(2, "Too short city name").max(200, "Must be shorted"),
-  address: yup.string().min(2, "Too short address").max(100, "Must be shorted"),
-  comment: yup.string().max(200, "Must be shorted"),
+    .max(100, "Must be shorted"),
+
+  city: yup
+    .string()
+    .required("Enter a city")
+    .min(2, "Too short city name")
+    .max(30, "Must be shorted"),
+  address: yup
+    .string()
+    .required("Enter an address")
+    .min(2, "Too short address")
+    .max(100, "Must be shorted"),
+  comment: yup.string().max(200, "Must be shorter"),
+  price: yup.lazy((value) => {
+    switch (typeof value) {
+      case "object":
+        return yup.object().shape({
+          from: yup.string(),
+          to: yup.string(),
+        }); // schema for object
+      case "number":
+        return yup.number(); // schema for number
+      case "string":
+        return yup.string(); // schema for string
+
+      default:
+        return yup.mixed(); // here you can decide what is the default
+    }
+  }),
 });
 
 const Form = () => {
+  const [isRange, setIsRange] = useState(false);
+  const [isOneWage, setIsOneWage] = useState(true);
+  const [isWithoutWage, setIsWithoutWage] = useState(false);
+  const [priceFrom, setPriceFrom] = useState("");
+  const [priceTo, setPriceTo] = useState("");
+
   const {
     register,
     control,
@@ -44,6 +78,30 @@ const Form = () => {
       console.error(e);
     }
   };
+
+  function handleIsRangeChange(e) {
+    setIsRange(e.target.checked);
+    setIsOneWage(false);
+    setIsWithoutWage(false);
+  }
+
+  function handleIsOneWageChange(e) {
+    setIsOneWage(e.target.checked);
+    setIsRange(false);
+    setIsWithoutWage(false);
+  }
+
+  function handleIsWithoutWageChange(e) {
+    setIsWithoutWage(e.target.checked);
+    setIsRange(false);
+    setIsOneWage(false);
+  }
+
+  // useEffect(() => {
+  //   if (inProgress === true) {
+  //     alert(`inProgress is ${inProgress}`);
+  //   }
+  // });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -73,6 +131,11 @@ const Form = () => {
             color="info"
             placeholder="Город"
           />
+          {errors.city && (
+            <span role="alert" className="errorMessage">
+              {errors.city.message}
+            </span>
+          )}
         </div>
         <div className="label-wrapper">
           <label>Условия работы</label>
@@ -83,6 +146,11 @@ const Form = () => {
             color="info"
             placeholder="Улица и дом"
           />
+          {errors.address && (
+            <span role="alert" className="errorMessage">
+              {errors.address.message}
+            </span>
+          )}
         </div>
         <FormLabel id="demo-radio-buttons-group-label">Зарплата*</FormLabel>
         <RadioGroup
@@ -94,24 +162,100 @@ const Form = () => {
             value="range"
             control={<Radio />}
             label="Диапазон"
+            onChange={handleIsRangeChange}
+            checked={isRange}
           />
+          {isRange && (
+            <div>
+              <TextField
+                {...register("price.from")}
+                placeholder="From"
+                type="number"
+                variant="outlined"
+                size="small"
+                onChange={(e) => setPriceFrom(e.target.value)}
+                value={priceFrom}
+                InputProps={{
+                  endAdornment: priceFrom && (
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setPriceFrom("")}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  ),
+                }}
+              />
+              -
+              <TextField
+                {...register("price.to")}
+                placeholder="To"
+                type="number"
+                variant="outlined"
+                size="small"
+                onChange={(e) => setPriceTo(e.target.value)}
+                value={priceTo}
+                InputProps={{
+                  endAdornment: priceTo && (
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setPriceTo("")}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  ),
+                }}
+              />
+            </div>
+          )}
           <FormControlLabel
-            value="one_value"
+            value="oneValue"
             control={<Radio />}
             label="Одно значение"
+            onChange={handleIsOneWageChange}
+            checked={isOneWage}
           />
+          {isOneWage && (
+            <>
+              {" "}
+              <TextField
+                {...register("price")}
+                placeholder="Сумма"
+                type="number"
+                variant="outlined"
+                size="small"
+              />{" "}
+              грн в месяц
+              {/* {errors.price && (
+                <span role="alert" className="errorMessage">
+                  {errors.price.message}
+                </span>
+              )} */}
+            </>
+          )}
           <FormControlLabel
-            value="without_salary"
+            {...register("price")}
+            value="withoutSalary"
             control={<Radio />}
             label="Не указывать (не рекомендуется)"
+            onChange={handleIsWithoutWageChange}
+            checked={isWithoutWage}
           />
         </RadioGroup>
-        <TextField
-          {...register("comment")}
-          id="outlined-basic"
-          variant="outlined"
-          color="info"
-        />
+        <div className="label-wrapper">
+          <label>Комментарий к зарплате</label>
+          <TextField
+            {...register("comment")}
+            id="outlined-basic"
+            variant="outlined"
+            color="info"
+          />
+          {errors.comment && (
+            <span role="alert" className="errorMessage">
+              {errors.comment.message}
+            </span>
+          )}
+        </div>
         <Button type="submit">Сохранить</Button>
         или
         <Button color="success" variant="text" onClick={() => clearErrors()}>
