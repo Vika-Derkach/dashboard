@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import VacanciesReducer from "../reducers/VacanciesSlice";
-
+import VacancyReducer from "../reducers/VacancySlice";
 const rootReducer = combineReducers({
   VacanciesReducer,
+  VacancyReducer,
   //   [postAPI.reducerPath]: postAPI.reducer,
 });
 

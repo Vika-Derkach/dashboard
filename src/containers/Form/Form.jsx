@@ -12,7 +12,10 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import * as yup from "yup";
+import { fetchCreateVacancy } from "../../actions/ActionCreators";
+import { AutocompleteCity } from "../../components";
 import "./Form.css";
 
 const FormSchema = yup.object().shape({
@@ -57,6 +60,7 @@ const Form = () => {
   const [isWithoutWage, setIsWithoutWage] = useState(false);
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -71,6 +75,7 @@ const Form = () => {
 
   const onSubmit = async (formData) => {
     try {
+      dispatch(fetchCreateVacancy(formData));
       console.log(formData);
 
       reset();
@@ -124,13 +129,14 @@ const Form = () => {
         <div>Условия работы</div>
         <div className="label-wrapper">
           <label>Город работы*:</label>
-          <TextField
+          {/* <TextField
             {...register("city")}
             id="outlined-basic"
             variant="outlined"
             color="info"
-            placeholder="Город"
-          />
+            placeholder="Город" 
+          /> */}
+          <AutocompleteCity {...register("city")} />
           {errors.city && (
             <span role="alert" className="errorMessage">
               {errors.city.message}
@@ -224,6 +230,7 @@ const Form = () => {
                 type="number"
                 variant="outlined"
                 size="small"
+                onChange={(e) => Number(e.target.value)}
               />{" "}
               грн в месяц
               {/* {errors.price && (

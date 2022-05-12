@@ -12,7 +12,7 @@ const Vacancies = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchVacancies());
-  }, []);
+  }, [dispatch]);
 
   console.log(vacancies);
 
@@ -33,10 +33,11 @@ const Vacancies = () => {
           <div>loading</div>
         ) : (
           <>
-            {vacancies.map((vac) => {
+            {vacancies?.map((vac) => {
               return (
                 <Card variant="outlined" key={vac.id}>
                   <div> {vac.name}</div>
+                  <div> {vac.city}</div>
                   {typeof vac.price === "object" ? (
                     <>
                       {vac.price.from} - {vac.price.to}
