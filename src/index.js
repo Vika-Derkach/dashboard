@@ -1,24 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 import { ErrorBoundry } from "./components";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-// import { setupStore } from "./store/store";
+import { setupStore } from "./store/store";
 
-// const store = setupStore();
+const store = setupStore();
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <Provider store={store}> */}
-    <ErrorBoundry>
-      <Router>
-        <App />
-      </Router>
-    </ErrorBoundry>
-
-    {/* </Provider> */}
+    <Provider store={store}>
+      <ErrorBoundry>
+        <Router>
+          <App />
+        </Router>
+      </ErrorBoundry>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

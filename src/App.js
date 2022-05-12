@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { ErrorBoundry, Spinner } from "./components";
-import { Home, Vacancies } from "./pages";
+import { Home, Vacancies, Vacancy } from "./pages";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/vacancies" component={Vacancies} />
-
+            <Route path="/vacancy" component={Vacancy} />
             <Route
               render={() => (
                 <div className="mistake-page">
