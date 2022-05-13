@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as yup from "yup";
-import { createNewVacancy } from "../../actions/ActionCreators";
+import { createNewVacancy, updateVacancy } from "../../actions/ActionCreators";
 import { AutocompleteCity } from "../../components";
 import "./Form.css";
 
@@ -65,7 +65,7 @@ const FormSchema = yup.object().shape({
   // }),
 });
 
-const Form = ({ defaultValues }) => {
+const Form = ({ defaultValues, toUpdate }) => {
   const [redirectToVacanciesPage, setRedirectToVacanciesPage] = useState(false);
   const [isRange, setIsRange] = useState(false);
   const [isOneWage, setIsOneWage] = useState(true);
@@ -80,7 +80,7 @@ const Form = ({ defaultValues }) => {
     (state) => state.VacanciesReducer
   );
   // const [errorRes, setErrorRes] = useState(error);
-
+  console.log(toUpdate, "toUpdate");
   const {
     register,
     control,
@@ -91,10 +91,13 @@ const Form = ({ defaultValues }) => {
   } = useForm({ defaultValues, resolver: yupResolver(FormSchema) });
 
   const onSubmit = async (formData) => {
-    dispatch(createNewVacancy(formData));
     console.log(formData);
 
     if (!error) {
+      if (toUpdate) {
+        dispatch(updateVacancy(formData));
+      }
+      dispatch(createNewVacancy(formData));
       setIsSuccess(true);
       reset();
     }
@@ -126,7 +129,6 @@ const Form = ({ defaultValues }) => {
   //     alert(`inProgress is ${inProgress}`);
   //   }
   // });
-  console.log(error);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

@@ -16,9 +16,9 @@ export const fetchCities = createAsyncThunk(
 );
 export const fetchVacancies = () => async (dispatch) => {
   try {
-    const getCities = await axios.get("http://localhost:3001/cities");
-    let obj = getCities.data.find((o) => o.id === "38");
-    console.log(obj, "getCities");
+    // const getCities = await axios.get("http://localhost:3001/cities");
+    // let obj = getCities.data.find((o) => o.id === "38");
+    // console.log(obj, "getCities");
 
     dispatch(vacanciesSlice.actions.vacanciesFetching());
     const response = await axios.get("http://localhost:3001/vacancies");
@@ -48,7 +48,6 @@ export const createNewVacancy = (vacancy) => async (dispatch) => {
     const response = await axios.post("http://localhost:3001/vacancy", {
       vacancy,
     });
-    console.log(response);
 
     dispatch(vacanciesSlice.actions.vacanciesFetching());
 
@@ -60,7 +59,6 @@ export const createNewVacancy = (vacancy) => async (dispatch) => {
 
 export const deleteVacancy = (vacancy) => async (dispatch) => {
   try {
-    console.log(vacancy, "vacancy del");
     await axios.delete(
       `http://localhost:3001/vacancy/${vacancy.id}`,
       {

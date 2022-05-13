@@ -16,7 +16,6 @@ function App() {
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/vacancies" component={Vacancies} />
-            <Route path="/vacancy" component={Vacancy} />
             <Route
               path="/vacancy/:id"
               // render={({ match }) => {
@@ -26,6 +25,7 @@ function App() {
               // }}
               children={<VacancyUpdate />}
             />
+            <Route path="/vacancy" component={Vacancy} />
             <Route
               render={() => (
                 <div className="mistake-page">
