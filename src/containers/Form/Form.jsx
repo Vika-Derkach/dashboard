@@ -36,25 +36,33 @@ const FormSchema = yup.object().shape({
     .min(2, "Too short address")
     .max(100, "Must be shorted"),
   comment: yup.string().max(200, "Must be shorter"),
-  price: yup.lazy((value) => {
-    switch (typeof value) {
-      case "object":
-        return yup.object().shape({
-          from: yup.string().nullable(),
-          to: yup.string().nullable(),
-        }); // schema for object
-      case "number":
-        return yup.number(); // schema for number
-      case "string":
-        return yup.string(); // schema for string
-
-      default:
-        return yup.mixed().nullable(); // here you can decide what is the default
-    }
+  priceFromTo: yup.object().shape({
+    from: yup.string(),
+    to: yup.string(),
   }),
+  priceOne: yup.string(),
+
+  priceEmtpy: yup.string().nullable(true),
+
+  // yup.lazy((value) => {
+  //   switch (typeof value) {
+  //     case "object":
+  //       return yup.object().shape({
+  //         from: yup.string(),
+  //         to: yup.string(),
+  //       }); // schema for object
+  //     case "number":
+  //       return yup.number(); // schema for number
+  //     case "string":
+  //       return yup.string(); // schema for string
+
+  //     default:
+  //       return yup.mixed().notRequired(); // here you can decide what is the default
+  //   }
+  // }),
 });
 
-const Form = () => {
+const Form = ({ defaultValues }) => {
   const [isRange, setIsRange] = useState(false);
   const [isOneWage, setIsOneWage] = useState(true);
   const [isWithoutWage, setIsWithoutWage] = useState(false);
@@ -70,9 +78,7 @@ const Form = () => {
     formState: { errors },
     reset,
     clearErrors,
-  } = useForm({
-    resolver: yupResolver(FormSchema),
-  });
+  } = useForm({ defaultValues, resolver: yupResolver(FormSchema) });
 
   const onSubmit = async (formData) => {
     try {
@@ -175,7 +181,7 @@ const Form = () => {
           {isRange && (
             <div>
               <TextField
-                {...register("price.from")}
+                {...register("priceFromTo.from")}
                 placeholder="From"
                 type="number"
                 variant="outlined"
@@ -195,7 +201,7 @@ const Form = () => {
               />
               -
               <TextField
-                {...register("price.to")}
+                {...register("priceFromTo.to")}
                 placeholder="To"
                 type="number"
                 variant="outlined"
@@ -225,13 +231,13 @@ const Form = () => {
           {isOneWage && (
             <>
               {" "}
-              <TextField
-                {...register("price")}
+              <input
+                {...register("priceOne")}
                 placeholder="Сумма"
-                type="number"
-                variant="outlined"
-                size="small"
-                onChange={(e) => Number(e.target.value)}
+                // type="number"
+                // variant="outlined"
+                // size="small"
+                // onChange={(e) => Number(e.target.value)}
               />{" "}
               грн в месяц
               {/* {errors.price && (
@@ -242,16 +248,26 @@ const Form = () => {
             </>
           )}
           <FormControlLabel
-            {...register("price")}
+            {...register("priceEmtpy")}
             value="withoutSalary"
             control={<Radio />}
             label="Не указывать (не рекомендуется)"
             onChange={handleIsWithoutWageChange}
             checked={isWithoutWage}
           />
-          {errors.price && (
+          {errors.priceOne && (
             <span role="alert" className="errorMessage">
-              {errors.price.message}
+              {errors.priceOne.message}
+            </span>
+          )}
+          {errors.priceFromTo && (
+            <span role="alert" className="errorMessage">
+              {errors.priceFromTo.message}
+            </span>
+          )}
+          {errors.priceEmtpy && (
+            <span role="alert" className="errorMessage">
+              {errors.priceEmtpy.message}
             </span>
           )}
         </RadioGroup>

@@ -49,7 +49,7 @@ app.post("/vacancy", (req, res) => {
       error: "vacancy is not defined",
     });
   }
-  console.log(req.body);
+
   const { vacancy } = req.body;
 
   if (vacancy.name && vacancy.city && vacancy.price) {

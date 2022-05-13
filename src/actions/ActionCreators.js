@@ -26,6 +26,16 @@ export const fetchVacancies = () => async (dispatch) => {
 
 export const createNewVacancy = (vacancy) => async (dispatch) => {
   try {
+    console.log("gfdgdf");
+    if (vacancy.priceFromTo && vacancy.priceFromTo.to) {
+      vacancy.price = vacancy.priceFromTo;
+      console.log("here2");
+    } else if (vacancy.priceOne) {
+      vacancy.price = vacancy.priceOne;
+      console.log("here");
+    } else {
+      vacancy.price = vacancy.priceEmtpy;
+    }
     const response = await axios.post("http://localhost:3001/vacancy", {
       vacancy,
     });

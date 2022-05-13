@@ -32,21 +32,24 @@ const Vacancies = () => {
           <div>loading</div>
         ) : (
           <>
-            {!!vacancies.length &&
+            {!!vacancies.length ? (
               vacancies.map((vac) => {
                 return (
                   <Card variant="outlined" key={vac.id}>
                     <div> {vac.name}</div>
-                    <div>
-                      {typeof vac.price === "object" ? (
-                        <>
-                          {vac.price.from} - {vac.price.to}
-                        </>
-                      ) : (
-                        <> {vac.price}</>
-                      )}{" "}
-                      грн {vac.comment && <>· {vac.comment}</>}
-                    </div>
+                    {vac.price && vac.price !== "withoutSalary" && (
+                      <div>
+                        {typeof vac.price === "object" ? (
+                          <>
+                            {vac.price.from} - {vac.price.to}
+                          </>
+                        ) : (
+                          <> {vac.price}</>
+                        )}{" "}
+                        грн {vac.comment && <>· {vac.comment}</>}
+                      </div>
+                    )}
+
                     <div>
                       {vac.city}
                       {vac.address && <span>, {vac.address}</span>}
@@ -63,7 +66,10 @@ const Vacancies = () => {
                     </ButtonGroup>
                   </Card>
                 );
-              })}
+              })
+            ) : (
+              <Card>Нет вакансий.</Card>
+            )}
             {error && <div>Something went wrong</div>}
           </>
         )}
