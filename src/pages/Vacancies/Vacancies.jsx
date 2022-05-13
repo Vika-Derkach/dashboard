@@ -2,17 +2,30 @@ import { Button, ButtonGroup, Card, Container } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { deleteVacancy, fetchVacancies } from "../../actions/ActionCreators";
+import {
+  deleteVacancy,
+  fetchCities,
+  fetchVacancies,
+} from "../../actions/ActionCreators";
 
 const Vacancies = () => {
   const [redirectToAddVacPage, setRedirectToAddVacPage] = useState(false);
+  const [redirectToUpdatePage, setRedirectToUpdatePage] = useState(false);
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
   );
+  const {
+    cities,
+    isLoadeing: cityLoading,
+    error: cityError,
+  } = useSelector((state) => state.CitiesReducer);
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(fetchCities());
     dispatch(fetchVacancies());
   }, [dispatch]);
+
+  console.log(cities, "cities");
 
   console.log(vacancies);
   return (
@@ -34,8 +47,13 @@ const Vacancies = () => {
           <>
             {!!vacancies.length ? (
               vacancies.map((vac) => {
+                const cityName = cities?.find((o) => o.id === vac.city);
+
                 return (
                   <Card variant="outlined" key={vac.id}>
+                    {redirectToUpdatePage && (
+                      <Redirect to={`/vacancy/${vac.id}`} />
+                    )}
                     <div> {vac.name}</div>
                     {vac.price && vac.price !== "withoutSalary" && (
                       <div>
@@ -51,7 +69,8 @@ const Vacancies = () => {
                     )}
 
                     <div>
-                      {vac.city}
+                      {cityName && <>{cityName.name}</>}
+
                       {vac.address && <span>, {vac.address}</span>}
                     </div>
 
@@ -59,7 +78,9 @@ const Vacancies = () => {
                       variant="outlined"
                       aria-label="outlined button group"
                     >
-                      <Button>Редактировать</Button>
+                      <Button onClick={() => setRedirectToUpdatePage(true)}>
+                        Редактировать
+                      </Button>
                       <Button onClick={() => dispatch(deleteVacancy(vac))}>
                         Удалить
                       </Button>

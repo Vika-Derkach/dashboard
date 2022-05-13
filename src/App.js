@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { ErrorBoundry, Spinner } from "./components";
-import { Home, Vacancies, Vacancy } from "./pages";
+import { Home, Vacancies, Vacancy, VacancyUpdate } from "./pages";
 
 function App() {
   return (
@@ -17,6 +17,15 @@ function App() {
             <Route path="/" component={Home} exact />
             <Route path="/vacancies" component={Vacancies} />
             <Route path="/vacancy" component={Vacancy} />
+            <Route
+              path="/vacancy/:id"
+              // render={({ match }) => {
+              //   const { id } = match.params;
+
+              //   return <VacancyUpdate itemId={id} />;
+              // }}
+              children={<VacancyUpdate />}
+            />
             <Route
               render={() => (
                 <div className="mistake-page">

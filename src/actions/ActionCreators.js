@@ -16,6 +16,10 @@ export const fetchCities = createAsyncThunk(
 );
 export const fetchVacancies = () => async (dispatch) => {
   try {
+    const getCities = await axios.get("http://localhost:3001/cities");
+    let obj = getCities.data.find((o) => o.id === "38");
+    console.log(obj, "getCities");
+
     dispatch(vacanciesSlice.actions.vacanciesFetching());
     const response = await axios.get("http://localhost:3001/vacancies");
     dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
@@ -26,17 +30,21 @@ export const fetchVacancies = () => async (dispatch) => {
 
 export const createNewVacancy = (vacancy) => async (dispatch) => {
   try {
-    console.log("gfdgdf");
     if (vacancy.priceFromTo && vacancy.priceFromTo.to) {
       vacancy.price = vacancy.priceFromTo;
-      console.log("here2");
     } else if (vacancy.priceOne) {
       vacancy.price = vacancy.priceOne;
-      console.log("here");
     } else {
       vacancy.price = vacancy.priceEmtpy;
     }
 
+    const cityName = vacancy.city;
+
+    const cityInfo = await axios.get(
+      `http://localhost:3001/cities?search=${cityName}`
+    );
+
+    vacancy.city = cityInfo.data[0].id;
     const response = await axios.post("http://localhost:3001/vacancy", {
       vacancy,
     });
