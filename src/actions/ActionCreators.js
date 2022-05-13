@@ -36,9 +36,11 @@ export const createNewVacancy = (vacancy) => async (dispatch) => {
     } else {
       vacancy.price = vacancy.priceEmtpy;
     }
+
     const response = await axios.post("http://localhost:3001/vacancy", {
       vacancy,
     });
+    console.log(response);
 
     dispatch(vacanciesSlice.actions.vacanciesFetching());
 
@@ -52,6 +54,27 @@ export const deleteVacancy = (vacancy) => async (dispatch) => {
   try {
     console.log(vacancy, "vacancy del");
     await axios.delete(
+      `http://localhost:3001/vacancy/${vacancy.id}`,
+      {
+        vacancy,
+      },
+      {
+        headers: { "Content-Type": `Bearer ${JSON.stringify(vacancy)}` },
+      }
+    );
+    const response = await axios.get("http://localhost:3001/vacancies");
+    dispatch(vacanciesSlice.actions.vacanciesFetching());
+
+    dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
+  } catch (e) {
+    dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
+  }
+};
+
+export const updateVacancy = (vacancy) => async (dispatch) => {
+  try {
+    console.log(vacancy, "vacancy put");
+    await axios.put(
       `http://localhost:3001/vacancy/${vacancy.id}`,
       {
         vacancy,

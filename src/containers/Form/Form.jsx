@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
   Button,
+  Card,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -9,10 +10,12 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 import * as yup from "yup";
 import { createNewVacancy } from "../../actions/ActionCreators";
 import { AutocompleteCity } from "../../components";
@@ -63,6 +66,7 @@ const FormSchema = yup.object().shape({
 });
 
 const Form = ({ defaultValues }) => {
+  const [redirectToVacanciesPage, setRedirectToVacanciesPage] = useState(false);
   const [isRange, setIsRange] = useState(false);
   const [isOneWage, setIsOneWage] = useState(true);
   const [isWithoutWage, setIsWithoutWage] = useState(false);
@@ -70,6 +74,12 @@ const Form = ({ defaultValues }) => {
   const [priceTo, setPriceTo] = useState("");
   const dispatch = useDispatch();
   const [openedItem, setOpenedItem] = useState("OneWage");
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const { isLoadeing, error, vacancies } = useSelector(
+    (state) => state.VacanciesReducer
+  );
+  // const [errorRes, setErrorRes] = useState(error);
 
   const {
     register,
@@ -81,14 +91,16 @@ const Form = ({ defaultValues }) => {
   } = useForm({ defaultValues, resolver: yupResolver(FormSchema) });
 
   const onSubmit = async (formData) => {
-    try {
-      dispatch(createNewVacancy(formData));
-      console.log(formData);
+    dispatch(createNewVacancy(formData));
+    console.log(formData);
 
+    if (!error) {
+      setIsSuccess(true);
       reset();
-    } catch (e) {
-      console.error(e);
     }
+    // else {
+    //   setError("something went wrong");
+    // }
   };
 
   function handleIsRangeChange(e) {
@@ -114,9 +126,31 @@ const Form = ({ defaultValues }) => {
   //     alert(`inProgress is ${inProgress}`);
   //   }
   // });
+  console.log(error);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {redirectToVacanciesPage && <Redirect to="/vacancies" />}
+      {isSuccess && !error && (
+        <Card>
+          <div>Вакансія створена</div>
+
+          <button
+            aria-label="Закрить оповещение"
+            onClick={() => setIsSuccess(false)}
+          >
+            <ClearIcon />
+          </button>
+        </Card>
+      )}
+      {error && (
+        <Card>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            Что-то пошло не так, попробуйте обновить страницу, або подивіться на
+            поля
+          </Typography>
+        </Card>
+      )}
       <FormControl>
         <div className="label-wrapper">
           <label htmlFor="name">Название должности*</label>
@@ -231,12 +265,12 @@ const Form = ({ defaultValues }) => {
           {isOneWage && (
             <>
               {" "}
-              <input
+              <TextField
                 {...register("priceOne")}
                 placeholder="Сумма"
-                // type="number"
-                // variant="outlined"
-                // size="small"
+                type="number"
+                variant="outlined"
+                size="small"
                 // onChange={(e) => Number(e.target.value)}
               />{" "}
               грн в месяц
@@ -287,7 +321,11 @@ const Form = ({ defaultValues }) => {
         </div>
         <Button type="submit">Сохранить</Button>
         или
-        <Button color="success" variant="text" onClick={() => clearErrors()}>
+        <Button
+          color="success"
+          variant="text"
+          onClick={() => setRedirectToVacanciesPage(true)}
+        >
           Отменить
         </Button>
       </FormControl>
