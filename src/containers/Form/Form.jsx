@@ -65,7 +65,7 @@ const FormSchema = yup.object().shape({
   // }),
 });
 
-const Form = ({ defaultValues, toUpdate }) => {
+const Form = ({ defaultValues, toUpdate, updateCityName }) => {
   const [redirectToVacanciesPage, setRedirectToVacanciesPage] = useState(false);
   const [isRange, setIsRange] = useState(false);
   const [isOneWage, setIsOneWage] = useState(true);
@@ -179,7 +179,10 @@ const Form = ({ defaultValues, toUpdate }) => {
             color="info"
             placeholder="Город" 
           /> */}
-          <AutocompleteCity {...register("city")} />
+          <AutocompleteCity
+            {...register("city")}
+            updateCityName={updateCityName}
+          />
           {errors.city && (
             <span role="alert" className="errorMessage">
               {errors.city.message}

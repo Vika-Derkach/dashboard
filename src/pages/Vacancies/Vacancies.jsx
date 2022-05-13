@@ -24,7 +24,7 @@ const Vacancies = () => {
     dispatch(fetchCities());
     dispatch(fetchVacancies());
   }, [dispatch]);
-
+  console.log(vacancies, "vacancies");
   return (
     <div>
       {redirectToAddVacPage && <Redirect to="/vacancy" />}

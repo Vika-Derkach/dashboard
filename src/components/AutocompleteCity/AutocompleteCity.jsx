@@ -5,7 +5,7 @@ import React, { forwardRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCities } from "../../actions/ActionCreators";
 
-const AutocompleteCity = forwardRef(({ ...props }, ref) => {
+const AutocompleteCity = forwardRef(({ updateCityName, ...props }, ref) => {
   const { isLoadeing, error, cities } = useSelector(
     (state) => state.CitiesReducer
   );
@@ -51,6 +51,7 @@ const AutocompleteCity = forwardRef(({ ...props }, ref) => {
       onClose={() => {
         setOpen(false);
       }}
+      defaultValue={updateCityName ? updateCityName : null}
       isOptionEqualToValue={(option, value) => option.name === value.name}
       getOptionLabel={(option) => option.name}
       options={options}
