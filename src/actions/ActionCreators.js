@@ -43,8 +43,8 @@ export const createNewVacancy = (vacancy) => async (dispatch) => {
     const cityInfo = await axios.get(
       `http://localhost:3001/cities?search=${cityName}`
     );
-
-    vacancy.city = cityInfo.data[0].id;
+    console.log(cityInfo, cityInfo.data);
+    vacancy.city = cityInfo?.data[0].id;
     const response = await axios.post("http://localhost:3001/vacancy", {
       vacancy,
     });
@@ -53,6 +53,7 @@ export const createNewVacancy = (vacancy) => async (dispatch) => {
 
     dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
   } catch (e) {
+    console.error(e);
     dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
   }
 };
@@ -73,6 +74,7 @@ export const deleteVacancy = (vacancy) => async (dispatch) => {
 
     dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
   } catch (e) {
+    console.error(e);
     dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
   }
 };
@@ -84,16 +86,21 @@ export const updateVacancy = (vacancy) => async (dispatch) => {
       `http://localhost:3001/vacancy/${vacancy.id}`,
       {
         vacancy,
-      },
-      {
-        headers: { "Content-Type": `Bearer ${JSON.stringify(vacancy)}` },
       }
+      // {
+      //   headers: {
+      //     "Content-Type": `application/json `,
+      //     // Authorization:
+      //     //   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJmZHNmcyI6ImZzZGZzZCJ9.6-hrKvHcmdAlpJD8U9ivQGNoAqok-7pb-wsyDsGeVR4",
+      //   },
+      // }
     );
     const response = await axios.get("http://localhost:3001/vacancies");
     dispatch(vacanciesSlice.actions.vacanciesFetching());
 
     dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
   } catch (e) {
+    console.error(e);
     dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
   }
 };

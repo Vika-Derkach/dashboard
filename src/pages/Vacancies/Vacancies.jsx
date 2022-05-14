@@ -14,17 +14,15 @@ const Vacancies = () => {
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
   );
-  const {
-    cities,
-    isLoadeing: cityLoading,
-    error: cityError,
-  } = useSelector((state) => state.CitiesReducer);
+  const { cities } = useSelector((state) => state.CitiesReducer);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchCities());
     dispatch(fetchVacancies());
   }, [dispatch]);
+
   console.log(vacancies, "vacancies");
+
   return (
     <div>
       {redirectToAddVacPage && <Redirect to="/vacancy" />}

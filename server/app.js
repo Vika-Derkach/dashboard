@@ -69,6 +69,7 @@ app.post("/vacancy", (req, res) => {
 });
 
 app.put("/vacancy/:id", (req, res) => {
+  console.log(req.body);
   if (!req.body || !req.body.vacancy) {
     res.status(500).json({
       error: "vacancy is not defined",

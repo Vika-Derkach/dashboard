@@ -80,7 +80,7 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
     (state) => state.VacanciesReducer
   );
   // const [errorRes, setErrorRes] = useState(error);
-  console.log(toUpdate, "toUpdate");
+
   const {
     register,
     control,
@@ -129,7 +129,8 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
   //     alert(`inProgress is ${inProgress}`);
   //   }
   // });
-
+  console.log(defaultValues, "defaultValues");
+  console.log(error);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {redirectToVacanciesPage && <Redirect to="/vacancies" />}
@@ -279,11 +280,11 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
                 // onChange={(e) => Number(e.target.value)}
               />{" "}
               грн в месяц
-              {/* {errors.price && (
+              {errors.priceOne && (
                 <span role="alert" className="errorMessage">
-                  {errors.price.message}
+                  {errors.priceOne.message}
                 </span>
-              )} */}
+              )}
             </>
           )}
           <FormControlLabel
