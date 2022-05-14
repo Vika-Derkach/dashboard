@@ -1,30 +1,22 @@
 import React, { Suspense } from "react";
-import { Link, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import "./App.css";
-import { ErrorBoundry, Spinner } from "./components";
+import { ErrorBoundry, Header, Spinner } from "./components";
 import { Home, Vacancies, Vacancy, VacancyUpdate } from "./pages";
 
 function App() {
   return (
     <div>
       <ErrorBoundry>
+        <Header />
         {/* <Header />
         <ScrollTopArrow /> */}
-        <Link to="/vacancies">Vacancies</Link>
-        <Link to="/">Home</Link>
+
         <Suspense fallback={<Spinner />}>
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/vacancies" component={Vacancies} />
-            <Route
-              path="/vacancy/:id"
-              // render={({ match }) => {
-              //   const { id } = match.params;
-
-              //   return <VacancyUpdate itemId={id} />;
-              // }}
-              children={<VacancyUpdate />}
-            />
+            <Route path="/vacancy/:id" children={<VacancyUpdate />} />
             <Route path="/vacancy" component={Vacancy} />
             <Route
               render={() => (

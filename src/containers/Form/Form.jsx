@@ -12,17 +12,17 @@ import {
 import React, { memo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { vacancyModifiy } from "../../actions/ActionCreators";
 import { AutocompleteCity, PriceGroup } from "../../components";
 import "./Form.css";
 import { FormSchema } from "./FormSchema";
 
 const Form = memo(({ defaultValues, toUpdate }) => {
-  const [redirectToVacanciesPage, setRedirectToVacanciesPage] = useState(false);
   console.log(defaultValues, "inForm");
   const dispatch = useDispatch();
   const [isSuccess, setIsSuccess] = useState(false);
+  const history = useHistory();
   console.log({ isSuccess });
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
@@ -61,8 +61,6 @@ const Form = memo(({ defaultValues, toUpdate }) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {redirectToVacanciesPage && <Redirect to="/vacancies" />}
-
         {error && (
           <Card
             sx={{
@@ -147,7 +145,7 @@ const Form = memo(({ defaultValues, toUpdate }) => {
           <Button
             color="success"
             variant="text"
-            onClick={() => setRedirectToVacanciesPage(true)}
+            onClick={() => history.push("/vacancies")}
           >
             Отменить
           </Button>
