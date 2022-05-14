@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Card, Container } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   deleteVacancy,
   fetchCities,
@@ -9,8 +9,7 @@ import {
 } from "../../actions/ActionCreators";
 
 const Vacancies = () => {
-  const [redirectToAddVacPage, setRedirectToAddVacPage] = useState(false);
-  const [redirectToUpdatePage, setRedirectToUpdatePage] = useState(false);
+  const history = useHistory();
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
   );
@@ -25,13 +24,12 @@ const Vacancies = () => {
 
   return (
     <div>
-      {redirectToAddVacPage && <Redirect to="/vacancy" />}
       <Container maxWidth="md">
         <h1>Вакансии и отклики</h1>
         <Button
           color="success"
           variant="contained"
-          onClick={() => setRedirectToAddVacPage(true)}
+          onClick={() => history.push("/vacancy")}
         >
           Создать вакансию
         </Button>
@@ -46,9 +44,6 @@ const Vacancies = () => {
 
                 return (
                   <Card variant="outlined" key={vac.id}>
-                    {redirectToUpdatePage && (
-                      <Redirect to={`/vacancy/${vac.id}`} />
-                    )}
                     <div> {vac.name}</div>
                     {vac.price && vac.price !== "withoutSalary" && (
                       <div>
@@ -73,7 +68,9 @@ const Vacancies = () => {
                       variant="outlined"
                       aria-label="outlined button group"
                     >
-                      <Button onClick={() => setRedirectToUpdatePage(true)}>
+                      <Button
+                        onClick={() => history.push(`/vacancy/${vac.id}`)}
+                      >
                         Редактировать
                       </Button>
                       <Button onClick={() => dispatch(deleteVacancy(vac))}>

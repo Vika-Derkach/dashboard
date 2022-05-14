@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -20,6 +20,12 @@ import * as yup from "yup";
 import { createNewVacancy, updateVacancy } from "../../actions/ActionCreators";
 import { AutocompleteCity } from "../../components";
 import "./Form.css";
+
+const priceTypes = {
+  range: "range",
+  one: "one",
+  empty: "empty",
+};
 
 const FormSchema = yup.object().shape({
   name: yup
@@ -65,15 +71,26 @@ const FormSchema = yup.object().shape({
   // }),
 });
 
+const checkTypes = (vacancy) => {
+  if (!vacancy) {
+    return priceTypes.one;
+  } else if (vacancy.price === "withoutSalary") {
+    return priceTypes.empty;
+  }
+  return vacancy.price.from && vacancy.price.to
+    ? priceTypes.range
+    : priceTypes.one;
+};
+
 const Form = ({ defaultValues, toUpdate, updateCityName }) => {
   const [redirectToVacanciesPage, setRedirectToVacanciesPage] = useState(false);
-  const [isRange, setIsRange] = useState(false);
-  const [isOneWage, setIsOneWage] = useState(true);
-  const [isWithoutWage, setIsWithoutWage] = useState(false);
+  const [currentPriceType, setCurrentPriceType] = useState(
+    checkTypes(defaultValues)
+  );
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
+  const [priceOne, setPriceOne] = useState("");
   const dispatch = useDispatch();
-  const [openedItem, setOpenedItem] = useState("OneWage");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const { isLoadeing, error, vacancies } = useSelector(
@@ -106,29 +123,38 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
     // }
   };
 
-  function handleIsRangeChange(e) {
-    setIsRange(e.target.checked);
-    setIsOneWage(false);
-    setIsWithoutWage(false);
-  }
+  const setPrice = () => {
+    if (currentPriceType === priceTypes.one) {
+      if (defaultValues) {
+        setPriceOne(defaultValues.price);
+      }
+      setPriceFrom("");
+      setPriceTo("");
+    } else if (currentPriceType === priceTypes.range) {
+      if (defaultValues) {
+        setPriceFrom(defaultValues.price.from);
+        setPriceTo(defaultValues.price.to);
+      }
+      setPriceOne("");
+    } else {
+      setPriceOne("");
+      setPriceFrom("");
+      setPriceTo("");
+    }
+  };
 
-  function handleIsOneWageChange(e) {
-    setIsOneWage(e.target.checked);
-    setIsRange(false);
-    setIsWithoutWage(false);
-  }
+  const handleChange = (type) => (e) => {
+    setCurrentPriceType(type);
+    setPrice();
+  };
 
-  function handleIsWithoutWageChange(e) {
-    setIsWithoutWage(e.target.checked);
-    setIsRange(false);
-    setIsOneWage(false);
-  }
+  useEffect(() => {
+    setPrice();
+  }, []);
 
-  // useEffect(() => {
-  //   if (inProgress === true) {
-  //     alert(`inProgress is ${inProgress}`);
-  //   }
-  // });
+  const isChacked = (type) => {
+    return type === currentPriceType;
+  };
   console.log(defaultValues, "defaultValues");
   console.log(error);
   return (
@@ -215,10 +241,10 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
             value="range"
             control={<Radio />}
             label="Диапазон"
-            onChange={handleIsRangeChange}
-            checked={isRange}
+            onChange={handleChange(priceTypes.range)}
+            checked={isChacked(priceTypes.range)}
           />
-          {isRange && (
+          {currentPriceType === priceTypes.range && (
             <div>
               <TextField
                 {...register("priceFromTo.from")}
@@ -265,10 +291,10 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
             value="oneValue"
             control={<Radio />}
             label="Одно значение"
-            onChange={handleIsOneWageChange}
-            checked={isOneWage}
+            onChange={handleChange(priceTypes.one)}
+            checked={isChacked(priceTypes.one)}
           />
-          {isOneWage && (
+          {currentPriceType === priceTypes.one && (
             <>
               {" "}
               <TextField
@@ -277,7 +303,8 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
                 type="number"
                 variant="outlined"
                 size="small"
-                // onChange={(e) => Number(e.target.value)}
+                onChange={(e) => setPriceOne(e.target.value)}
+                value={priceOne}
               />{" "}
               грн в месяц
               {errors.priceOne && (
@@ -292,8 +319,8 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
             value="withoutSalary"
             control={<Radio />}
             label="Не указывать (не рекомендуется)"
-            onChange={handleIsWithoutWageChange}
-            checked={isWithoutWage}
+            onChange={handleChange(priceTypes.empty)}
+            checked={isChacked(priceTypes.empty)}
           />
           {errors.priceOne && (
             <span role="alert" className="errorMessage">
