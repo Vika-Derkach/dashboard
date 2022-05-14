@@ -45,9 +45,10 @@ export const createNewVacancy = (vacancy) => async (dispatch) => {
     );
     console.log(cityInfo, cityInfo.data);
     vacancy.city = cityInfo?.data[0].id;
-    const response = await axios.post("http://localhost:3001/vacancy", {
+    await axios.post("http://localhost:3001/vacancy", {
       vacancy,
     });
+    const response = await axios.get("http://localhost:3001/vacancies");
 
     dispatch(vacanciesSlice.actions.vacanciesFetching());
 
@@ -97,10 +98,66 @@ export const updateVacancy = (vacancy) => async (dispatch) => {
     );
     const response = await axios.get("http://localhost:3001/vacancies");
     dispatch(vacanciesSlice.actions.vacanciesFetching());
-
+    console.log(response.data, "responce.data");
     dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
   } catch (e) {
     console.error(e);
     dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
   }
 };
+
+export const getCity = async (vacancy) => {
+  const cityName = vacancy.city;
+  const cityInfo = await axios.get(
+    `http://localhost:3001/cities?search=${cityName}`
+  );
+  console.log(cityInfo, cityInfo.data);
+  return cityInfo?.data[0].id;
+};
+
+export const getPrice = (vacancy) => {
+  if (vacancy.priceFromTo && vacancy.priceFromTo.to) {
+    vacancy.price = vacancy.priceFromTo;
+  } else if (vacancy.priceOne) {
+    vacancy.price = vacancy.priceOne;
+  } else {
+    vacancy.price = vacancy.priceEmtpy;
+  }
+
+  return vacancy.price;
+};
+
+export const fetchAll = async (dispatch) => {
+  const response = await axios.get("http://localhost:3001/vacancies");
+
+  dispatch(vacanciesSlice.actions.vacanciesFetching());
+
+  return dispatch(
+    vacanciesSlice.actions.vacanciesFetchingSuccess(response.data)
+  );
+};
+
+export const vacancyModifiy =
+  (vacancy, isUpdate = false) =>
+  async (dispatch) => {
+    try {
+      vacancy.price = getPrice(vacancy);
+
+      console.log(vacancy, "isUpdate");
+      dispatch(vacanciesSlice.actions.vacanciesUpdate(vacancy));
+
+      if (isUpdate) {
+        await axios.put(`http://localhost:3001/vacancy/${vacancy.id}`, {
+          vacancy,
+        });
+      } else {
+        await axios.post("http://localhost:3001/vacancy", {
+          vacancy,
+        });
+      }
+      await fetchAll(dispatch);
+    } catch (e) {
+      console.error(e);
+      dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
+    }
+  };

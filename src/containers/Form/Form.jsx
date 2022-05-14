@@ -4,54 +4,31 @@ import {
   Button,
   Card,
   FormControl,
-  FormControlLabel,
   FormLabel,
   IconButton,
-  Radio,
-  RadioGroup,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { memo, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { createNewVacancy, updateVacancy } from "../../actions/ActionCreators";
-import { AutocompleteCity } from "../../components";
+import { vacancyModifiy } from "../../actions/ActionCreators";
+import { AutocompleteCity, PriceGroup } from "../../components";
 import "./Form.css";
 import { FormSchema } from "./FormSchema";
 
-const priceTypes = {
-  range: "range",
-  one: "one",
-  empty: "empty",
-};
-
-const checkTypes = (vacancy) => {
-  if (!vacancy) {
-    return priceTypes.one;
-  } else if (vacancy.price === "withoutSalary") {
-    return priceTypes.empty;
-  }
-  return vacancy.price.from && vacancy.price.to
-    ? priceTypes.range
-    : priceTypes.one;
-};
-
-const Form = ({ defaultValues, toUpdate, updateCityName }) => {
+const Form = memo(({ defaultValues, toUpdate }) => {
   const [redirectToVacanciesPage, setRedirectToVacanciesPage] = useState(false);
-  const [currentPriceType, setCurrentPriceType] = useState(
-    checkTypes(defaultValues)
-  );
-  const [priceFrom, setPriceFrom] = useState("");
-  const [priceTo, setPriceTo] = useState("");
-  const [priceOne, setPriceOne] = useState("");
+  console.log(defaultValues, "inForm");
   const dispatch = useDispatch();
   const [isSuccess, setIsSuccess] = useState(false);
-
+  console.log({ isSuccess });
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
   );
+
+  const methods = useForm({ defaultValues, resolver: yupResolver(FormSchema) });
 
   const {
     register,
@@ -60,256 +37,153 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
     formState: { errors },
     reset,
     clearErrors,
-  } = useForm({ defaultValues, resolver: yupResolver(FormSchema) });
+  } = methods;
 
   const onSubmit = async (formData) => {
     console.log(formData);
+    console.log("update");
 
     if (!error) {
+      console.log({ toUpdate });
       if (toUpdate) {
-        dispatch(updateVacancy(formData));
+        dispatch(vacancyModifiy(formData, true));
+      } else {
+        dispatch(vacancyModifiy(formData));
+        reset();
       }
-      dispatch(createNewVacancy(formData));
+
       setIsSuccess(true);
-      reset();
     }
   };
 
-  const setPrice = () => {
-    if (currentPriceType === priceTypes.one) {
-      if (defaultValues) {
-        setPriceOne(defaultValues.price);
-      }
-      setPriceFrom("");
-      setPriceTo("");
-    } else if (currentPriceType === priceTypes.range) {
-      if (defaultValues) {
-        setPriceFrom(defaultValues.price.from);
-        setPriceTo(defaultValues.price.to);
-      }
-      setPriceOne("");
-    } else {
-      setPriceOne("");
-      setPriceFrom("");
-      setPriceTo("");
-    }
-  };
-
-  const handleChange = (type) => () => {
-    setCurrentPriceType(type);
-    setPrice();
-  };
-
-  useEffect(() => {
-    setPrice();
-  }, []);
-
-  const isChacked = (type) => {
-    return type === currentPriceType;
-  };
   console.log(defaultValues, "defaultValues");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {redirectToVacanciesPage && <Redirect to="/vacancies" />}
-      {isSuccess && !error && (
-        <Card>
-          <div>Вакансія створена</div>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {redirectToVacanciesPage && <Redirect to="/vacancies" />}
 
-          <button
-            aria-label="Закрить оповещение"
-            onClick={() => setIsSuccess(false)}
+        {error && (
+          <Card
+            sx={{
+              backgroundColor: "#ff5f52",
+              display: "flex",
+              justifyContent: "space-around",
+              color: "red",
+              p: 1.5,
+            }}
           >
-            <ClearIcon />
-          </button>
-        </Card>
-      )}
-      {error && (
-        <Card>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            Что-то пошло не так, попробуйте обновить страницу, або подивіться на
-            поля
+            <Typography color="text.secondary">
+              Что-то пошло не так, попробуйте обновить страницу, або подивіться
+              на поля
+            </Typography>
+          </Card>
+        )}
+        <FormControl>
+          <div className="label-wrapper">
+            <FormLabel htmlFor="name">Название должности*</FormLabel>
+            <TextField
+              {...register("name")}
+              id="outlined-basic"
+              variant="outlined"
+              color="info"
+              placeholder="Название комментарий"
+            />
+            {errors.name && (
+              <span role="alert" className="errorMessage">
+                {errors.name.message}
+              </span>
+            )}
+          </div>
+          <Typography sx={{ mb: 1.5 }} variant="body1">
+            Условия работы
           </Typography>
-        </Card>
-      )}
-      <FormControl>
-        <div className="label-wrapper">
-          <label htmlFor="name">Название должности*</label>
-          <TextField
-            {...register("name")}
-            id="outlined-basic"
-            variant="outlined"
-            color="info"
-            placeholder="Название комментарий"
-          />
-          {errors.name && (
-            <span role="alert" className="errorMessage">
-              {errors.name.message}
-            </span>
-          )}
-        </div>
-        <div>Условия работы</div>
-        <div className="label-wrapper">
-          <label>Город работы*:</label>
+          <div className="label-wrapper">
+            <FormLabel>Город работы*:</FormLabel>
 
-          <AutocompleteCity
-            {...register("city")}
-            updateCityName={updateCityName}
-          />
-          {errors.city && (
-            <span role="alert" className="errorMessage">
-              {errors.city.message}
-            </span>
-          )}
-        </div>
-        <div className="label-wrapper">
-          <label>Условия работы</label>
-          <TextField
-            {...register("address")}
-            id="outlined-basic"
-            variant="outlined"
-            color="info"
-            placeholder="Улица и дом"
-          />
-          {errors.address && (
-            <span role="alert" className="errorMessage">
-              {errors.address.message}
-            </span>
-          )}
-        </div>
-        <FormLabel id="demo-radio-buttons-group-label">Зарплата*</FormLabel>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="one_value"
-          name="radio-buttons-group"
-        >
-          <FormControlLabel
-            value="range"
-            control={<Radio />}
-            label="Диапазон"
-            onChange={handleChange(priceTypes.range)}
-            checked={isChacked(priceTypes.range)}
-          />
-          {currentPriceType === priceTypes.range && (
-            <div>
-              <TextField
-                {...register("priceFromTo.from")}
-                placeholder="From"
-                type="number"
-                variant="outlined"
-                size="small"
-                onChange={(e) => setPriceFrom(e.target.value)}
-                value={priceFrom}
-                InputProps={{
-                  endAdornment: priceFrom && (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setPriceFrom("")}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  ),
-                }}
-              />
-              -
-              <TextField
-                {...register("priceFromTo.to")}
-                placeholder="To"
-                type="number"
-                variant="outlined"
-                size="small"
-                onChange={(e) => setPriceTo(e.target.value)}
-                value={priceTo}
-                InputProps={{
-                  endAdornment: priceTo && (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setPriceTo("")}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  ),
-                }}
-              />
-            </div>
-          )}
-          <FormControlLabel
-            value="oneValue"
-            control={<Radio />}
-            label="Одно значение"
-            onChange={handleChange(priceTypes.one)}
-            checked={isChacked(priceTypes.one)}
-          />
-          {currentPriceType === priceTypes.one && (
-            <>
-              {" "}
-              <TextField
-                {...register("priceOne")}
-                placeholder="Сумма"
-                type="number"
-                variant="outlined"
-                size="small"
-                onChange={(e) => setPriceOne(e.target.value)}
-                value={priceOne}
-              />{" "}
-              грн в месяц
-              {errors.priceOne && (
-                <span role="alert" className="errorMessage">
-                  {errors.priceOne.message}
-                </span>
+            <AutocompleteCity
+              {...register("city")}
+              updateCityName={defaultValues?.city}
+            />
+            {errors.city && (
+              <span role="alert" className="errorMessage">
+                {errors.city.message}
+              </span>
+            )}
+          </div>
+          <div className="label-wrapper">
+            <FormLabel>Адрес работы*:</FormLabel>
+            <TextField
+              {...register("address")}
+              id="outlined-basic"
+              variant="outlined"
+              color="info"
+              placeholder="Улица и дом"
+            />
+            {errors.address && (
+              <span role="alert" className="errorMessage">
+                {errors.address.message}
+              </span>
+            )}
+          </div>
+          <FormLabel id="demo-radio-buttons-group-label">Зарплата*</FormLabel>
+          <PriceGroup defaultValues={defaultValues} />
+          <div className="label-wrapper">
+            <FormLabel>Комментарий к зарплате</FormLabel>
+            <TextField
+              {...register("comment")}
+              id="outlined-basic"
+              variant="outlined"
+              color="info"
+            />
+            {errors.comment && (
+              <span role="alert" className="errorMessage">
+                {errors.comment.message}
+              </span>
+            )}
+          </div>
+          <Button type="submit">Сохранить</Button>
+          или
+          <Button
+            color="success"
+            variant="text"
+            onClick={() => setRedirectToVacanciesPage(true)}
+          >
+            Отменить
+          </Button>
+          {isSuccess && !error && (
+            <Card
+              sx={{
+                backgroundColor: "#aee571",
+                display: "flex",
+                justifyContent: "space-around",
+                color: "green",
+                p: 1.5,
+              }}
+            >
+              {toUpdate ? (
+                <Typography color="text.secondary">
+                  Вакансія редагована
+                </Typography>
+              ) : (
+                <Typography color="text.secondary">
+                  Вакансія створена
+                </Typography>
               )}
-            </>
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => setIsSuccess(false)}
+                color="success"
+              >
+                <ClearIcon fontSize="inherit" />
+              </IconButton>
+            </Card>
           )}
-          <FormControlLabel
-            {...register("priceEmtpy")}
-            value="withoutSalary"
-            control={<Radio />}
-            label="Не указывать (не рекомендуется)"
-            onChange={handleChange(priceTypes.empty)}
-            checked={isChacked(priceTypes.empty)}
-          />
-          {errors.priceOne && (
-            <span role="alert" className="errorMessage">
-              {errors.priceOne.message}
-            </span>
-          )}
-          {errors.priceFromTo && (
-            <span role="alert" className="errorMessage">
-              {errors.priceFromTo.message}
-            </span>
-          )}
-          {errors.priceEmtpy && (
-            <span role="alert" className="errorMessage">
-              {errors.priceEmtpy.message}
-            </span>
-          )}
-        </RadioGroup>
-        <div className="label-wrapper">
-          <label>Комментарий к зарплате</label>
-          <TextField
-            {...register("comment")}
-            id="outlined-basic"
-            variant="outlined"
-            color="info"
-          />
-          {errors.comment && (
-            <span role="alert" className="errorMessage">
-              {errors.comment.message}
-            </span>
-          )}
-        </div>
-        <Button type="submit">Сохранить</Button>
-        или
-        <Button
-          color="success"
-          variant="text"
-          onClick={() => setRedirectToVacanciesPage(true)}
-        >
-          Отменить
-        </Button>
-      </FormControl>
-    </form>
+        </FormControl>
+      </form>
+    </FormProvider>
   );
-};
+});
 
 export { Form };

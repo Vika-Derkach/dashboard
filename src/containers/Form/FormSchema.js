@@ -1,5 +1,5 @@
 import * as yup from "yup";
-
+const numRegExp = /^[0-9]*$/;
 export const FormSchema = yup.object().shape({
   name: yup
     .string()
@@ -9,6 +9,7 @@ export const FormSchema = yup.object().shape({
 
   city: yup
     .string()
+    // .matches(numRegExp, "EIN is not valid")
     .required("Enter a city")
     .min(2, "Too short city name")
     .max(30, "Must be shorted"),

@@ -1,11 +1,14 @@
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import React from "react";
 import { Form } from "../../containers";
 
 const Vacancy = () => {
   return (
     <Container maxWidth="md">
-      <h1>Создать вакансию</h1>
+      <Typography variant="h3" component="div" gutterBottom={true}>
+        Создать вакансию
+      </Typography>
+
       <Form />
     </Container>
   );

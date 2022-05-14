@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -10,12 +10,9 @@ const VacancyUpdate = () => {
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
   );
+  console.log(vacancies);
   const vacancyToUbdate = useSelector((state) =>
     state.VacanciesReducer.vacancies.find((elem) => elem.id === id)
-  );
-
-  const cityName = useSelector((state) =>
-    state.CitiesReducer.cities.find((o) => o.id === vacancyToUbdate?.city)
   );
 
   const dispatch = useDispatch();
@@ -28,14 +25,13 @@ const VacancyUpdate = () => {
 
   return (
     <Container maxWidth="md">
-      <h1>Редактировать вакансию {id}</h1>
+      <Typography variant="h3" component="div" gutterBottom={true}>
+        Редактировать вакансию
+      </Typography>
+
       {isLoadeing && <div>Wait a little bit</div>}
       {!isLoadeing && !error && (
-        <Form
-          defaultValues={vacancyToUbdate}
-          toUpdate={true}
-          updateCityName={cityName}
-        />
+        <Form defaultValues={vacancyToUbdate} toUpdate={true} />
       )}
     </Container>
   );

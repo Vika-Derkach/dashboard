@@ -1,11 +1,14 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useMemo, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCities } from "../../actions/ActionCreators";
 
 const AutocompleteCity = forwardRef(({ updateCityName, ...props }, ref) => {
+  const { setValue } = useFormContext();
+  console.log(updateCityName, "updateCityName");
   const { isLoadeing, error, cities } = useSelector(
     (state) => state.CitiesReducer
   );
@@ -14,6 +17,9 @@ const AutocompleteCity = forwardRef(({ updateCityName, ...props }, ref) => {
     dispatch(fetchCities());
   }, [dispatch]);
 
+  const defaultValue = useMemo(() => {
+    return cities?.find((city) => city.id === updateCityName);
+  }, [cities, updateCityName]);
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
@@ -48,12 +54,14 @@ const AutocompleteCity = forwardRef(({ updateCityName, ...props }, ref) => {
       onOpen={() => {
         setOpen(true);
       }}
+      onChange={(e, value) => setValue("city", value?.id || null)}
       onClose={() => {
         setOpen(false);
       }}
-      defaultValue={updateCityName ? updateCityName : null}
+      defaultValue={defaultValue || null}
       isOptionEqualToValue={(option, value) => option.name === value.name}
       getOptionLabel={(option) => option.name}
+      // defaultValue={updateCityName ? updateCityName : null}
       options={options}
       loading={isLoadeing}
       renderInput={(params) => (
@@ -73,7 +81,6 @@ const AutocompleteCity = forwardRef(({ updateCityName, ...props }, ref) => {
               </>
             ),
           }}
-          {...props}
         />
       )}
     />

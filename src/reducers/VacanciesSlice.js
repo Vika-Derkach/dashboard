@@ -22,6 +22,12 @@ export const vacanciesSlice = createSlice({
       state.isLoadeing = false;
       state.error = action.payload;
     },
+    vacanciesUpdate(state, action) {
+      const indexOfTheVacancy = state.vacancies.findIndex(
+        (elem) => elem.id === action.payload.id
+      );
+      state.vacancies[indexOfTheVacancy] = action.payload;
+    },
   },
   //   extraReducers: {
   //     [fetchVacancies.fulfilled.type]: (state, action) => {
