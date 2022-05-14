@@ -16,60 +16,16 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import * as yup from "yup";
 import { createNewVacancy, updateVacancy } from "../../actions/ActionCreators";
 import { AutocompleteCity } from "../../components";
 import "./Form.css";
+import { FormSchema } from "./FormSchema";
 
 const priceTypes = {
   range: "range",
   one: "one",
   empty: "empty",
 };
-
-const FormSchema = yup.object().shape({
-  name: yup
-    .string()
-    .required("Enter a name")
-    .min(2, "Must be bigger than one letter")
-    .max(100, "Must be shorted"),
-
-  city: yup
-    .string()
-    .required("Enter a city")
-    .min(2, "Too short city name")
-    .max(30, "Must be shorted"),
-  address: yup
-    .string()
-    .required("Enter an address")
-    .min(2, "Too short address")
-    .max(100, "Must be shorted"),
-  comment: yup.string().max(200, "Must be shorter"),
-  priceFromTo: yup.object().shape({
-    from: yup.string(),
-    to: yup.string(),
-  }),
-  priceOne: yup.string(),
-
-  priceEmtpy: yup.string().nullable(true),
-
-  // yup.lazy((value) => {
-  //   switch (typeof value) {
-  //     case "object":
-  //       return yup.object().shape({
-  //         from: yup.string(),
-  //         to: yup.string(),
-  //       }); // schema for object
-  //     case "number":
-  //       return yup.number(); // schema for number
-  //     case "string":
-  //       return yup.string(); // schema for string
-
-  //     default:
-  //       return yup.mixed().notRequired(); // here you can decide what is the default
-  //   }
-  // }),
-});
 
 const checkTypes = (vacancy) => {
   if (!vacancy) {
@@ -96,7 +52,6 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
   );
-  // const [errorRes, setErrorRes] = useState(error);
 
   const {
     register,
@@ -118,9 +73,6 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
       setIsSuccess(true);
       reset();
     }
-    // else {
-    //   setError("something went wrong");
-    // }
   };
 
   const setPrice = () => {
@@ -143,7 +95,7 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
     }
   };
 
-  const handleChange = (type) => (e) => {
+  const handleChange = (type) => () => {
     setCurrentPriceType(type);
     setPrice();
   };
@@ -156,7 +108,7 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
     return type === currentPriceType;
   };
   console.log(defaultValues, "defaultValues");
-  console.log(error);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {redirectToVacanciesPage && <Redirect to="/vacancies" />}
@@ -199,13 +151,7 @@ const Form = ({ defaultValues, toUpdate, updateCityName }) => {
         <div>Условия работы</div>
         <div className="label-wrapper">
           <label>Город работы*:</label>
-          {/* <TextField
-            {...register("city")}
-            id="outlined-basic"
-            variant="outlined"
-            color="info"
-            placeholder="Город" 
-          /> */}
+
           <AutocompleteCity
             {...register("city")}
             updateCityName={updateCityName}
