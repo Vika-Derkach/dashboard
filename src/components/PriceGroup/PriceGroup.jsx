@@ -30,32 +30,35 @@ const PriceGroup = ({ defaultValues }) => {
   const {
     register,
     setValue,
+    getValues,
     formState: { errors },
   } = useFormContext();
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
-  const [priceOne, setPriceOne] = useState("");
   const [currentPriceType, setCurrentPriceType] = useState(
     checkTypes(defaultValues)
   );
+
+  console.log(defaultValues, "defaultValues in group");
+  console.log(priceTo, "priceTo");
 
   const setPrice = () => {
     if (currentPriceType === priceTypes.one) {
       if (defaultValues) {
         setValue("priceOne", defaultValues.price);
       }
-      setPriceFrom("");
-      setPriceTo("");
+      setValue("priceFromTo.from", "");
+      setValue("priceFromTo.to", "");
     } else if (currentPriceType === priceTypes.range) {
       if (defaultValues) {
-        setPriceFrom(defaultValues.price.from);
-        setPriceTo(defaultValues.price.to);
+        setValue("priceFromTo.from", defaultValues.price.from);
+        setValue("priceFromTo.to", defaultValues.price.to);
       }
-      setPriceOne("");
+      setValue("priceOne", "");
     } else {
-      setPriceOne("");
-      setPriceFrom("");
-      setPriceTo("");
+      setValue("priceOne", "");
+      setValue("priceFromTo.from", "");
+      setValue("priceFromTo.to", "");
     }
   };
 
@@ -91,15 +94,13 @@ const PriceGroup = ({ defaultValues }) => {
             placeholder="From"
             type="number"
             variant="outlined"
-            defaultValue={priceFrom}
             size="small"
             onChange={(e) => setPriceFrom(e.target.value)}
-            value={priceFrom}
             InputProps={{
               endAdornment: priceFrom && (
                 <IconButton
                   aria-label="toggle password visibility"
-                  onClick={() => setPriceFrom("")}
+                  onClick={() => setValue("priceFromTo.from", "")}
                 >
                   <ClearIcon />
                 </IconButton>
@@ -114,12 +115,11 @@ const PriceGroup = ({ defaultValues }) => {
             variant="outlined"
             size="small"
             onChange={(e) => setPriceTo(e.target.value)}
-            value={priceTo}
             InputProps={{
               endAdornment: priceTo && (
                 <IconButton
                   aria-label="toggle password visibility"
-                  onClick={() => setPriceTo("")}
+                  onClick={() => setValue("priceFromTo.to", "")}
                 >
                   <ClearIcon />
                 </IconButton>
