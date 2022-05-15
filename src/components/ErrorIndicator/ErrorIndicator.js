@@ -1,6 +1,6 @@
 import React from "react";
 import icon from "./bam.jpg";
-import "./error-indicator.css";
+import "./ErrorIndicator.css";
 const ErrorIndicator = () => {
   return (
     <div className="error-indicator">
@@ -8,10 +8,10 @@ const ErrorIndicator = () => {
         <h3>BAM!!!</h3>
       </div>
       <div>Something has gone wrong but keep calm. </div>
-      <div> Everything is okay with models and clothes.</div>
+      <div> Everything is okay with the content</div>
       <div>We will fix it soon =)</div>
-      <img className="image-bam" src={icon} alt=" error icon" />
+      <img className="image-bam" src={icon} alt="error icon" />
     </div>
   );
 };
-export default ErrorIndicator;
+export { ErrorIndicator };

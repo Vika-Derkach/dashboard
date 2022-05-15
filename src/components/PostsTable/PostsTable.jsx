@@ -1,12 +1,19 @@
 // A great library for fuzzy filtering/sorting items
-import { Button } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Button, IconButton, Typography } from "@mui/material";
 import { matchSorter } from "match-sorter";
 import React, { useMemo } from "react";
-import { useFilters, useGlobalFilter, useTable } from "react-table";
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useTable,
+} from "react-table";
+import { ErrorIndicator } from "../../components";
 import { postAPI } from "../../services/PostsService";
 import { Spinner } from "../Spinner/Spinner";
 import "./PostsTable.css";
-
 // Define a default UI for filtering
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
@@ -33,7 +40,7 @@ function SliderColumnFilter({
   // Calculate the min and max
   // using the preFilteredRows
 
-  const [min, max] = React.useMemo(() => {
+  const [min, max] = useMemo(() => {
     let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
     let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
     preFilteredRows.forEach((row) => {
@@ -74,7 +81,7 @@ fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 // Our table component
 function Table({ columns, data }) {
-  const filterTypes = React.useMemo(
+  const filterTypes = useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
@@ -94,7 +101,7 @@ function Table({ columns, data }) {
     []
   );
 
-  const defaultColumn = React.useMemo(
+  const defaultColumn = useMemo(
     () => ({
       // Let's set up our default Filter UI
       Filter: DefaultColumnFilter,
@@ -102,21 +109,34 @@ function Table({ columns, data }) {
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data,
-        defaultColumn, // Be sure to pass the defaultColumn option
-        filterTypes,
-      },
-      useFilters, // useFilters!
-      useGlobalFilter // useGlobalFilter!
-    );
-
-  // We don't want to render all of the rows for this example, so cap
-  // it for this use case
-  const firstPageRows = rows.slice(0, 10);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn, // Be sure to pass the defaultColumn option
+      filterTypes,
+      initialState: { pageIndex: 0, pageSize: 5 },
+    },
+    useFilters, // useFilters!
+    useGlobalFilter, // useGlobalFilter!
+    usePagination
+  );
 
   return (
     <>
@@ -135,7 +155,7 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {firstPageRows.map((row, i) => {
+          {page.map((row, i) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
@@ -150,7 +170,52 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <br />
-      <div>Showing the first 20 results of {rows.length} rows</div>
+      <div className="pagination">
+        <IconButton
+          color="info"
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+        >
+          <ArrowBackIosNewIcon />
+        </IconButton>{" "}
+        <IconButton
+          color="info"
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+        >
+          <ArrowForwardIosIcon />
+        </IconButton>{" "}
+        <span>
+          Page{" "}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{" "}
+        </span>
+        <span>
+          | Go to page:{" "}
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+            style={{ width: "100px" }}
+          />
+        </span>{" "}
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[2, 5, 10, 20].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
     </>
   );
 }
@@ -170,13 +235,8 @@ function filterGreaterThan(rows, id, filterValue) {
 filterGreaterThan.autoRemove = (val) => typeof val !== "number";
 
 const PostsTable = ({ user }) => {
-  const {
-    data: posts,
-    error,
-    isLoading,
-    refetch,
-  } = postAPI.useFetchAllPostsQuery();
-  const columns = React.useMemo(
+  const { data: posts, error, isLoading } = postAPI.useFetchAllPostsQuery();
+  const columns = useMemo(
     () => [
       {
         Header: "ID",
@@ -202,15 +262,16 @@ const PostsTable = ({ user }) => {
     [posts, user.id]
   );
 
-  console.log(posts, "posts");
-  console.log(userPosts, "user.id");
-
-  const data = React.useMemo(() => userPosts, [userPosts]);
+  const data = useMemo(() => userPosts, [userPosts]);
 
   return (
     <>
+      <Typography variant="h5" component="div" sx={{ m: 1 }}>
+        Posts
+      </Typography>
       {isLoading && <Spinner />}
       {!isLoading && !error && posts && <Table columns={columns} data={data} />}
+      {error && <ErrorIndicator />}
     </>
   );
 };

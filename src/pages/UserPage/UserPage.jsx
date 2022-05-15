@@ -55,9 +55,7 @@ const UserPage = () => {
               <Typography variant="body2">City: {user.address.city}</Typography>
             </CardContent>
           </Card>
-          <Typography variant="h5" component="div">
-            Posts
-          </Typography>
+
           <PostsTable user={user} />
         </Container>
       )}
