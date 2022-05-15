@@ -8,7 +8,7 @@ import { fetchCities } from "../../actions/ActionCreators";
 
 const AutocompleteCity = forwardRef(({ updateCityName, ...props }, ref) => {
   const { setValue } = useFormContext();
-  console.log(updateCityName, "updateCityName");
+
   const { isLoadeing, error, cities } = useSelector(
     (state) => state.CitiesReducer
   );
@@ -66,6 +66,7 @@ const AutocompleteCity = forwardRef(({ updateCityName, ...props }, ref) => {
       loading={isLoadeing}
       renderInput={(params) => (
         <TextField
+          autoComplete="off"
           ref={ref}
           {...params}
           placeholder="Город"

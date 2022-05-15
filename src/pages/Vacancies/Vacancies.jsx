@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { fetchCities, fetchVacancies } from "../../actions/ActionCreators";
-import { VacancyCard } from "../../components";
+import { Spinner, VacancyCard } from "../../components";
 
 const Vacancies = () => {
   const history = useHistory();
@@ -16,8 +16,6 @@ const Vacancies = () => {
     dispatch(fetchCities());
     dispatch(fetchVacancies());
   }, [dispatch]);
-
-  console.log(vacancies, "vacancies");
 
   return (
     <div>
@@ -35,7 +33,7 @@ const Vacancies = () => {
         </Button>
 
         {isLoadeing ? (
-          <div>loading</div>
+          <Spinner />
         ) : (
           <>
             {!!vacancies.length ? (
@@ -49,9 +47,9 @@ const Vacancies = () => {
             ) : (
               <Card>Нет вакансий.</Card>
             )}
-            {error && <div>Something went wrong</div>}
           </>
         )}
+        {error && <div>Something went wrong</div>}
       </Container>
     </div>
   );

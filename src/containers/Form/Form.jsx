@@ -19,7 +19,6 @@ import "./Form.css";
 import { FormSchema } from "./FormSchema";
 
 const Form = memo(({ defaultValues, toUpdate }) => {
-  console.log(defaultValues, "inForm");
   const dispatch = useDispatch();
   const [isSuccess, setIsSuccess] = useState(false);
   const history = useHistory();
@@ -56,8 +55,6 @@ const Form = memo(({ defaultValues, toUpdate }) => {
     }
   };
 
-  console.log(defaultValues, "defaultValues");
-
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -82,6 +79,7 @@ const Form = memo(({ defaultValues, toUpdate }) => {
             <FormLabel htmlFor="name">Название должности*</FormLabel>
             <TextField
               {...register("name")}
+              autoComplete="off"
               id="outlined-basic"
               variant="outlined"
               color="info"
@@ -117,6 +115,7 @@ const Form = memo(({ defaultValues, toUpdate }) => {
               variant="outlined"
               color="info"
               placeholder="Улица и дом"
+              autoComplete="off"
             />
             {errors.address && (
               <span role="alert" className="errorMessage">

@@ -10,24 +10,13 @@ export const fetchCities = createAsyncThunk(
 
       return response.data;
     } catch (e) {
+      console.error(e);
       return thunkAPI.rejectWithValue("Inposible to load cities");
     }
   }
 );
-export const fetchVacancies = () => async (dispatch) => {
-  try {
-    // const getCities = await axios.get("http://localhost:3001/cities");
-    // let obj = getCities.data.find((o) => o.id === "38");
-    // console.log(obj, "getCities");
 
-    dispatch(vacanciesSlice.actions.vacanciesFetching());
-    const response = await axios.get("http://localhost:3001/vacancies");
-    dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
-  } catch (e) {
-    dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
-  }
-};
-
+// not used because there is vacancyModifiy which do upadete and create acording to the condition
 export const createNewVacancy = (vacancy) => async (dispatch) => {
   try {
     if (vacancy.priceFromTo && vacancy.priceFromTo.to) {
@@ -59,27 +48,7 @@ export const createNewVacancy = (vacancy) => async (dispatch) => {
   }
 };
 
-export const deleteVacancy = (vacancy) => async (dispatch) => {
-  try {
-    await axios.delete(
-      `http://localhost:3001/vacancy/${vacancy.id}`,
-      {
-        vacancy,
-      },
-      {
-        headers: { "Content-Type": `Bearer ${JSON.stringify(vacancy)}` },
-      }
-    );
-    const response = await axios.get("http://localhost:3001/vacancies");
-    dispatch(vacanciesSlice.actions.vacanciesFetching());
-
-    dispatch(vacanciesSlice.actions.vacanciesFetchingSuccess(response.data));
-  } catch (e) {
-    console.error(e);
-    dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
-  }
-};
-
+// not used because there is vacancyModifiy which do upadete and create acording to the condition
 export const updateVacancy = (vacancy) => async (dispatch) => {
   try {
     console.log(vacancy, "vacancy put");
@@ -111,7 +80,7 @@ export const getCity = async (vacancy) => {
   const cityInfo = await axios.get(
     `http://localhost:3001/cities?search=${cityName}`
   );
-  console.log(cityInfo, cityInfo.data);
+
   return cityInfo?.data[0].id;
 };
 
@@ -137,13 +106,25 @@ export const fetchAll = async (dispatch) => {
   );
 };
 
+export const fetchVacancies = () => async (dispatch) => {
+  try {
+    // const getCities = await axios.get("http://localhost:3001/cities");
+    // let obj = getCities.data.find((o) => o.id === "38");
+    // console.log(obj, "getCities");
+
+    await fetchAll(dispatch);
+  } catch (e) {
+    console.error(e);
+    dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
+  }
+};
+
 export const vacancyModifiy =
   (vacancy, isUpdate = false) =>
   async (dispatch) => {
     try {
       vacancy.price = getPrice(vacancy);
 
-      console.log(vacancy, "isUpdate");
       dispatch(vacanciesSlice.actions.vacanciesUpdate(vacancy));
 
       if (isUpdate) {
@@ -161,3 +142,22 @@ export const vacancyModifiy =
       dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
     }
   };
+
+export const deleteVacancy = (vacancy) => async (dispatch) => {
+  try {
+    await axios.delete(
+      `http://localhost:3001/vacancy/${vacancy.id}`,
+      {
+        vacancy,
+      },
+      {
+        headers: { "Content-Type": `Bearer ${JSON.stringify(vacancy)}` },
+      }
+    );
+
+    await fetchAll(dispatch);
+  } catch (e) {
+    console.error(e);
+    dispatch(vacanciesSlice.actions.vacanciesFetchingError(e.message));
+  }
+};

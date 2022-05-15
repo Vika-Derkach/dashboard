@@ -40,7 +40,6 @@ const PriceGroup = ({ defaultValues }) => {
   );
 
   console.log(defaultValues, "defaultValues in group");
-  console.log(priceTo, "priceTo");
 
   const setPrice = () => {
     if (currentPriceType === priceTypes.one) {

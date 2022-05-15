@@ -21,7 +21,6 @@ const VacancyUpdate = () => {
     dispatch(fetchVacancies());
   }, [dispatch]);
   console.log(vacancies);
-  console.log(vacancyToUbdate, "vacancyToUbdate");
 
   return (
     <Container maxWidth="md">
