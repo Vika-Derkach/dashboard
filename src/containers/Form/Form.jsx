@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
+  Alert,
   Button,
-  Card,
   FormControl,
   FormLabel,
   IconButton,
@@ -59,20 +59,12 @@ const Form = memo(({ defaultValues, toUpdate }) => {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
         {error && (
-          <Card
-            sx={{
-              backgroundColor: "#ff5f52",
-              display: "flex",
-              justifyContent: "space-around",
-              color: "red",
-              p: 1.5,
-            }}
-          >
+          <Alert severity="error">
             <Typography color="text.secondary">
               Что-то пошло не так, попробуйте обновить страницу, або подивіться
               на поля
             </Typography>
-          </Card>
+          </Alert>
         )}
         <FormControl>
           <div className="label-wrapper">
@@ -86,9 +78,7 @@ const Form = memo(({ defaultValues, toUpdate }) => {
               placeholder="Название комментарий"
             />
             {errors.name && (
-              <span role="alert" className="errorMessage">
-                {errors.name.message}
-              </span>
+              <span severity="success">{errors.name.message}</span>
             )}
           </div>
           <Typography sx={{ mb: 1.5 }} variant="body1">
@@ -149,15 +139,7 @@ const Form = memo(({ defaultValues, toUpdate }) => {
             Отменить
           </Button>
           {isSuccess && !error && (
-            <Card
-              sx={{
-                backgroundColor: "#aee571",
-                display: "flex",
-                justifyContent: "space-around",
-                color: "green",
-                p: 1.5,
-              }}
-            >
+            <Alert severity="success">
               {toUpdate ? (
                 <Typography color="text.secondary">
                   Вакансія редагована
@@ -175,7 +157,7 @@ const Form = memo(({ defaultValues, toUpdate }) => {
               >
                 <ClearIcon fontSize="inherit" />
               </IconButton>
-            </Card>
+            </Alert>
           )}
         </FormControl>
       </form>

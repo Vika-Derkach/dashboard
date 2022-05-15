@@ -2,7 +2,14 @@ import React, { Suspense } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import { ErrorBoundry, Header, Spinner } from "./components";
-import { Home, Users, Vacancies, Vacancy, VacancyUpdate } from "./pages";
+import {
+  Home,
+  UserPage,
+  Users,
+  Vacancies,
+  Vacancy,
+  VacancyUpdate,
+} from "./pages";
 
 function App() {
   return (
@@ -15,6 +22,8 @@ function App() {
         <Suspense fallback={<Spinner />}>
           <Switch>
             <Route path="/" component={Home} exact />
+            <Route path="/users/:id" children={<UserPage />} />
+
             <Route path="/users" component={Users} />
             <Route path="/vacancies" component={Vacancies} />
             <Route path="/vacancy/:id" children={<VacancyUpdate />} />
@@ -29,8 +38,6 @@ function App() {
                 </div>
               )}
             />
-
-            <Route render={() => <h2>Page is not found</h2>} />
           </Switch>
         </Suspense>
       </ErrorBoundry>

@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import CitiesReducer from "../reducers/CitiesSlice";
 import VacanciesReducer from "../reducers/VacanciesSlice";
+import { postAPI } from "../services/PostsService";
 import { userAPI } from "../services/UserService";
 
 const rootReducer = combineReducers({
@@ -8,6 +9,7 @@ const rootReducer = combineReducers({
 
   CitiesReducer,
   [userAPI.reducerPath]: userAPI.reducer,
+  [postAPI.reducerPath]: postAPI.reducer,
 });
 
 export const setupStore = () => {

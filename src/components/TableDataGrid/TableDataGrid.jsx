@@ -1,5 +1,6 @@
 import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
+import { Link } from "react-router-dom";
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "username", headerName: "Name", width: 130 },
@@ -26,6 +27,12 @@ const columns = [
     sortable: false,
     width: 160,
     renderCell: (params) => `${params.row.company.name}`,
+  },
+  {
+    field: "Route",
+    renderCell: (cellValues) => {
+      return <Link to={`/users/${cellValues.row.id}`}>Details</Link>;
+    },
   },
 ];
 const TableDataGrid = ({ users }) => {
