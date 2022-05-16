@@ -11,7 +11,7 @@ export const stockAPI = createApi({
       query: (symbolStoke) => ({
         url: `/query`,
         params: {
-          symbol: "FB",
+          symbol: symbolStoke,
           function: "TIME_SERIES_MONTHLY_ADJUSTED",
           datatype: "json",
         },

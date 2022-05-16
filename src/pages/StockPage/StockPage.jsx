@@ -1,7 +1,6 @@
 import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { StockChart } from "../../components";
-import { stockAPI } from "../../services/StockServer";
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -10,34 +9,7 @@ function a11yProps(index) {
 }
 
 const StockPage = () => {
-  const { data, error, isLoading, refetch } = stockAPI.useFetchAllStocksQuery();
   const [value, setValue] = useState(0);
-  console.log(data && data["Monthly Adjusted Time Series"]);
-
-  const monthlyDays = useMemo(
-    () => data && Object.keys(data["Monthly Adjusted Time Series"]),
-    [data]
-  );
-  const monthlyValues = useMemo(
-    () => data && Object.values(data["Monthly Adjusted Time Series"]),
-    [data]
-  );
-
-  const monthlyData = useMemo(
-    () =>
-      data &&
-      monthlyDays.map((dayElem, dayI) => {
-        return { days: dayElem, mounthValue: monthlyValues[dayI]["2. high"] };
-      }),
-    [data, monthlyDays, monthlyValues]
-  );
-
-  const limitedData = monthlyData?.slice(0, 20);
-  console.log(limitedData);
-
-  console.log(monthlyDays);
-  console.log(monthlyValues);
-  console.log(monthlyData, "monthlyData");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,19 +26,17 @@ const StockPage = () => {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            <Tab label="Item One" {...a11yProps(0)} />
-            <Tab label="Item Two" {...a11yProps(1)} />
-            <Tab label="Item Three" {...a11yProps(2)} />
+            <Tab label="Facebook" {...a11yProps(0)} />
+            <Tab label="Netflix" {...a11yProps(1)} />
+            <Tab label="Amazon" {...a11yProps(2)} />
           </Tabs>
         </Box>
-        {!isLoading && limitedData && (
-          <>
-            <StockChart value={value} index={0} data={limitedData} />
-            <StockChart value={value} index={1} data={limitedData} />
-            <StockChart value={value} index={2} data={limitedData} />
-            <StockChart value={value} index={3} data={limitedData} />
-          </>
-        )}
+
+        <>
+          <StockChart value={value} index={0} symbol="FB" />
+          <StockChart value={value} index={1} symbol="NFLX" />
+          <StockChart value={value} index={2} symbol="AMZN" />
+        </>
       </Box>
     </Container>
   );
