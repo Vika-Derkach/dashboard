@@ -21,11 +21,10 @@ const UserPage = () => {
   console.log(user, "user");
 
   return (
-    <div>
-      {id}
+    <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>
       {isLoading && <Spinner />}
       {!isLoading && !isError && user && (
-        <Container maxWidth="md">
+        <>
           <Card variant="outlined">
             {" "}
             <CardContent>
@@ -44,7 +43,7 @@ const UserPage = () => {
               <Typography variant="body2">Phone: {user.phone}</Typography>
               <Typography variant="body2">Website: {user.website}</Typography>
               <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
-                address
+                Address
               </Typography>
               <Typography variant="body2">
                 Street: {user.address.street}
@@ -57,9 +56,9 @@ const UserPage = () => {
           </Card>
 
           <PostsTable user={user} />
-        </Container>
+        </>
       )}
-    </div>
+    </Container>
   );
 };
 

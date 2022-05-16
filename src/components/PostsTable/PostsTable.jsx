@@ -1,7 +1,13 @@
 // A great library for fuzzy filtering/sorting items
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Button, IconButton, Typography } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  NativeSelect,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { matchSorter } from "match-sorter";
 import React, { useMemo } from "react";
 import {
@@ -21,7 +27,12 @@ function DefaultColumnFilter({
   const count = preFilteredRows.length;
 
   return (
-    <input
+    <TextField
+      id="outlined-basic"
+      variant="outlined"
+      color="info"
+      size="small"
+      sx={{ backgroundColor: "white" }}
       value={filterValue || ""}
       onChange={(e) => {
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
@@ -147,7 +158,6 @@ function Table({ columns, data }) {
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>
                   {column.render("Header")}
-                  {/* Render the columns filter UI */}
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
               ))}
@@ -185,16 +195,18 @@ function Table({ columns, data }) {
         >
           <ArrowForwardIosIcon />
         </IconButton>{" "}
-        <span>
+        <Typography variant="body1" component="span">
           Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
-        </span>
-        <span>
+        </Typography>
+        <Typography variant="body1" component="span">
           | Go to page:{" "}
-          <input
+          <TextField
+            id="outlined-number"
             type="number"
+            size="small"
             defaultValue={pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
@@ -202,11 +214,15 @@ function Table({ columns, data }) {
             }}
             style={{ width: "100px" }}
           />
-        </span>{" "}
-        <select
+        </Typography>{" "}
+        <NativeSelect
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
+          }}
+          inputProps={{
+            name: "age",
+            id: "uncontrolled-native",
           }}
         >
           {[2, 5, 10, 20].map((pageSize) => (
@@ -214,7 +230,7 @@ function Table({ columns, data }) {
               Show {pageSize}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
     </>
   );
