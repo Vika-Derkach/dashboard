@@ -146,6 +146,7 @@ function Table({ columns, data }) {
     },
     useFilters, // useFilters!
     useGlobalFilter, // useGlobalFilter!
+
     usePagination
   );
 
@@ -158,6 +159,14 @@ function Table({ columns, data }) {
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>
                   {column.render("Header")}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? " 🔽"
+                        : " 🔼"
+                      : ""}
+                  </span>
+
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
               ))}
