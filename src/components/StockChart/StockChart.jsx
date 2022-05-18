@@ -16,6 +16,7 @@ import "./StockChart.css";
 
 const StockChart = (props) => {
   const { children, value, index, symbol, ...other } = props;
+
   const { data, error, isLoading, refetch } =
     stockAPI.useFetchAllStocksQuery(symbol);
 

@@ -1,7 +1,10 @@
 import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { StockChart } from "../../components";
+
 function a11yProps(index) {
+  console.log(index);
+
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
@@ -33,9 +36,10 @@ const StockPage = () => {
         </Box>
 
         <>
-          <StockChart value={value} index={0} symbol="FB" />
-          <StockChart value={value} index={1} symbol="NFLX" />
-          <StockChart value={value} index={2} symbol="AMZN" />
+          {value === 0 && <StockChart value={value} index={0} symbol="FB" />}
+          {value === 1 && <StockChart value={value} index={1} symbol="NFLX" />}
+
+          {value === 2 && <StockChart value={value} index={2} symbol="AMZN" />}
         </>
       </Box>
     </Container>
