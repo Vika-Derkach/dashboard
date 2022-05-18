@@ -5,6 +5,8 @@ import {
   Legend,
   Line,
   LineChart,
+  Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -25,6 +27,11 @@ const types = {
   [period.weeks]: "WEEKLY",
 };
 
+const typesLower = {
+  [period.monthes]: "Monthly",
+  [period.weeks]: "Weekly",
+};
+
 const StockChart = (props) => {
   const { children, value, index, symbol, ...other } = props;
   const [currentPeriod, setCurrentPeriod] = useState(period.monthes);
@@ -32,24 +39,24 @@ const StockChart = (props) => {
   const { data, error, isLoading, refetch } = stockAPI.useFetchAllStocksQuery({
     symbolStoke: symbol,
     timeSeties: `TIME_SERIES_${types[currentPeriod]}_ADJUSTED`,
-    // : "TIME_SERIES_WEEKLY_ADJUSTED",
   });
 
   const limitedData = useMemo(() => {
-    if (data) {
-      const timeSeries = data["Monthly Adjusted Time Series"];
+    if (data && data[`${typesLower[currentPeriod]} Adjusted Time Series`]) {
+      const timeSeries =
+        data[`${typesLower[currentPeriod]} Adjusted Time Series`];
       return Object.keys(timeSeries)
         ?.map((key) => {
           return {
             days: key,
-            mounthHigh: timeSeries[key]["2. high"],
-            mounthLow: timeSeries[key]["3. low"],
+            mounthHigh: parseInt(timeSeries[key]["2. high"]),
+            mounthLow: parseInt(timeSeries[key]["3. low"]),
           };
         })
-        ?.slice(0, 20)
+        ?.slice(0, 12)
         .reverse();
     }
-  }, [data]);
+  }, [data, currentPeriod]);
 
   console.log(limitedData, "limitedData");
 
@@ -86,45 +93,64 @@ const StockChart = (props) => {
       </Button>
 
       {!isLoading && limitedData && (
-        <ResponsiveContainer
-          width="100%"
-          height="100%"
-          minWidth="100px"
-          minHeight="50px"
-        >
-          <LineChart
-            width={500}
-            height={300}
-            data={limitedData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
+        <>
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth="100px"
+            minHeight="50px"
           >
-            <CartesianGrid
-              // strokeDasharray="0"
-              horizontal
-              vertical={false}
-              horizontalFill={["#92B4EC", "#9ADCFF"]}
-              fillOpacity={0.2}
-            />
-            <XAxis dataKey="days" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="mounthHigh"
-              stroke="#8884d8"
-              fillOpacity={1}
-              activeDot={{ r: 8 }}
-            />
-            <Line type="monotone" dataKey="mounthLow" stroke="#82ca9d" />
-            <Line type="monotone" dataKey="amt" stroke="#000" />
-          </LineChart>
-        </ResponsiveContainer>
+            <LineChart
+              width={500}
+              height={300}
+              data={limitedData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid
+                // strokeDasharray="0"
+                horizontal
+                vertical={false}
+                horizontalFill={["#92B4EC", "#9ADCFF"]}
+                fillOpacity={0.2}
+              />
+              <XAxis dataKey="days" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="mounthHigh"
+                stroke="#8884d8"
+                fillOpacity={1}
+                activeDot={{ r: 8 }}
+              />
+              <Line type="monotone" dataKey="mounthLow" stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
+
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart width={400} height={400}>
+              <Pie
+                dataKey="mounthHigh"
+                nameKey="days"
+                isAnimationActive={false}
+                data={limitedData}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#8884d8"
+                label
+              />
+
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </>
       )}
       {isLoading && <Spinner />}
       {error && <ErrorIndicator />}
