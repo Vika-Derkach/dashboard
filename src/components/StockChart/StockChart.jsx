@@ -40,7 +40,7 @@ const StockChart = (props) => {
     [data, monthlyDays, monthlyValues]
   );
 
-  const limitedData = monthlyData?.slice(0, 20);
+  const limitedData = monthlyData?.slice(0, 20).reverse();
   console.log(limitedData, "limitedData");
 
   return (
@@ -79,6 +79,7 @@ const StockChart = (props) => {
               type="monotone"
               dataKey="mounthValue"
               stroke="#8884d8"
+              fillOpacity={1}
               activeDot={{ r: 8 }}
             />
             {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
