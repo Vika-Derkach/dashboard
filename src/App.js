@@ -4,6 +4,7 @@ import "./App.css";
 import { ErrorBoundry, Header, Spinner } from "./components";
 import {
   Home,
+  Population,
   StockPage,
   UserPage,
   Users,
@@ -29,6 +30,7 @@ function App() {
             <Route path="/vacancy/:id" children={<VacancyUpdate />} />
             <Route path="/vacancy" component={Vacancy} />
             <Route path="/stocks" component={StockPage} />
+            <Route path="/population" component={Population} />
             <Route
               render={() => (
                 <div className="mistake-page">

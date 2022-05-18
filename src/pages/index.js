@@ -1,4 +1,5 @@
 export * from "./Home/Home";
+export * from "./Population/Population";
 export * from "./StockPage/StockPage";
 export * from "./UserPage/UserPage";
 export * from "./Users/Users";

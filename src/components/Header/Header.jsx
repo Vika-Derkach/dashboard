@@ -99,6 +99,14 @@ const Header = () => {
           >
             <Link to="/stocks">Stocks</Link>
           </Typography>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+          >
+            <Link to="/population">Population</Link>
+          </Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
