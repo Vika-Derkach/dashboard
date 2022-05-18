@@ -8,11 +8,11 @@ export const stockAPI = createApi({
   tagTypes: ["Stock"],
   endpoints: (build) => ({
     fetchAllStocks: build.query({
-      query: (symbolStoke) => ({
+      query: ({ symbolStoke, timeSeties }) => ({
         url: `/query`,
         params: {
           symbol: symbolStoke,
-          function: "TIME_SERIES_MONTHLY_ADJUSTED",
+          function: timeSeties,
           datatype: "json",
         },
         headers: {
