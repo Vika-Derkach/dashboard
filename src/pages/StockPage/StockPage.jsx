@@ -1,6 +1,6 @@
 import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { StockChart } from "../../components";
+import { StockContainer } from "../../containers/StockContainer/StockContainer";
 
 function a11yProps(index) {
   console.log(index);
@@ -37,10 +37,16 @@ const StockPage = () => {
         </Box>
 
         <>
-          {value === 0 && <StockChart value={value} index={0} symbol="FB" />}
-          {value === 1 && <StockChart value={value} index={1} symbol="NFLX" />}
+          {value === 0 && (
+            <StockContainer value={value} index={0} symbol="FB" />
+          )}
+          {value === 1 && (
+            <StockContainer value={value} index={1} symbol="NFLX" />
+          )}
 
-          {value === 2 && <StockChart value={value} index={2} symbol="AMZN" />}
+          {value === 2 && (
+            <StockContainer value={value} index={2} symbol="AMZN" />
+          )}
         </>
       </Box>
     </Container>

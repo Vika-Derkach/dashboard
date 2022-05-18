@@ -1,6 +1,5 @@
 import { Container, Typography } from "@mui/material";
 import React from "react";
-import { StockPieChart } from "../../components";
 
 const Home = () => {
   return (
@@ -8,7 +7,6 @@ const Home = () => {
       <Typography variant="h5" component="div" sx={{ m: 1.5 }}>
         Home
       </Typography>
-      <StockPieChart />
     </Container>
   );
 };

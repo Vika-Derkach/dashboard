@@ -6,6 +6,5 @@ export * from "./PostsTable/PostsTable";
 export * from "./PriceGroup/PriceGroup";
 export * from "./Spinner/Spinner";
 export * from "./StockChart/StockChart";
-export * from "./StockPieChart/StockPieChart";
 export * from "./TableDataGrid/TableDataGrid";
 export * from "./VacancyCard/VacancyCard";
