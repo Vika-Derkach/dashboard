@@ -15,76 +15,48 @@ import { ErrorIndicator } from "../ErrorIndicator/ErrorIndicator";
 import { Spinner } from "../Spinner/Spinner";
 import "./StockChart.css";
 
+const period = {
+  weeks: "weeks",
+  monthes: "monthes",
+};
+
+const types = {
+  [period.monthes]: "MONTHLY",
+  [period.weeks]: "WEEKLY",
+};
+
 const StockChart = (props) => {
   const { children, value, index, symbol, ...other } = props;
-  const [monthes, setMonthes] = useState(true);
-  const [weeks, setWeeks] = useState(false);
-
-  // let timeSeties;
-  // if (monthes) {
-  //   timeSeties = "TIME_SERIES_MONTHLY_ADJUSTED";
-  // } else {
-  //   timeSeties = "TIME_SERIES_WEEKLY_ADJUSTED";
-  // }
+  const [currentPeriod, setCurrentPeriod] = useState(period.monthes);
 
   const { data, error, isLoading, refetch } = stockAPI.useFetchAllStocksQuery({
     symbolStoke: symbol,
-    timeSeties: monthes
-      ? "TIME_SERIES_MONTHLY_ADJUSTED"
-      : "TIME_SERIES_WEEKLY_ADJUSTED",
+    timeSeties: `TIME_SERIES_${types[currentPeriod]}_ADJUSTED`,
+    // : "TIME_SERIES_WEEKLY_ADJUSTED",
   });
 
-  console.log(data && data["Monthly Adjusted Time Series"]);
-  // console.log(timeSeties);
-  const monthlyDays = useMemo(
-    () =>
-      data &&
-      (monthes
-        ? Object.keys(data["Monthly Adjusted Time Series"])
-        : Object.keys(data["Weekly Adjusted Time Series"])),
-    [data, monthes]
-  );
+  const limitedData = useMemo(() => {
+    if (data) {
+      const timeSeries = data["Monthly Adjusted Time Series"];
+      return Object.keys(timeSeries)
+        ?.map((key) => {
+          return {
+            days: key,
+            mounthHigh: timeSeries[key]["2. high"],
+            mounthLow: timeSeries[key]["3. low"],
+          };
+        })
+        ?.slice(0, 20)
+        .reverse();
+    }
+  }, [data]);
 
-  console.log(monthlyDays, "monthlyDays");
-  const monthlyValues = useMemo(
-    () =>
-      data &&
-      (monthes
-        ? Object.values(data["Monthly Adjusted Time Series"])
-        : Object.values(data["Weekly Adjusted Time Series"])),
-    [data, monthes]
-  );
-  console.log(monthlyValues, "monthlyValues");
-
-  const monthlyData = useMemo(
-    () =>
-      data &&
-      monthlyDays.map((dayElem, dayI) => {
-        return {
-          days: dayElem,
-          mounthHigh: monthlyValues[dayI]["2. high"],
-          mounthLow: monthlyValues[dayI]["3. low"],
-        };
-      }),
-    [data, monthlyDays, monthlyValues]
-  );
-
-  const limitedData = monthlyData?.slice(0, 20).reverse();
   console.log(limitedData, "limitedData");
 
-  // const handleWeeks = () => {
-  //   setMonthes(false);
-  //   setWeeks(true);
-  // };
-
-  // const handleMonthes = () => {
-  //   setWeeks(false);
-  //   setMonthes(true);
-  // };
-
   const handleValues = () => {
-    setWeeks(!weeks);
-    setMonthes(!monthes);
+    setCurrentPeriod(
+      currentPeriod === period.monthes ? period.weeks : period.monthes
+    );
   };
 
   return (
@@ -101,12 +73,15 @@ const StockChart = (props) => {
       </Typography>
 
       <Button
-        variant={monthes ? "contained" : "outlined"}
+        variant={currentPeriod === period.monthes ? "contained" : "outlined"}
         onClick={handleValues}
       >
         Months{" "}
       </Button>
-      <Button variant={weeks ? "contained" : "outlined"} onClick={handleValues}>
+      <Button
+        variant={currentPeriod === period.weeks ? "contained" : "outlined"}
+        onClick={handleValues}
+      >
         Weeks{" "}
       </Button>
 

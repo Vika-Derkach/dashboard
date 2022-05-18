@@ -18,7 +18,7 @@ export const stockAPI = createApi({
         headers: {
           "X-RapidAPI-Host": "alpha-vantage.p.rapidapi.com",
           "X-RapidAPI-Key":
-            "86ff17ecf1mshc5fb51e37f45f5ap1ae8bejsn5cb4d0ad6281",
+            "63be799c6fmsha1dc403a238adbbp1c9ad0jsn750e16e43512",
         },
       }),
       providesTags: (result) => ["Stock"],
