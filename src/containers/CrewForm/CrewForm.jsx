@@ -15,10 +15,14 @@ import { GenderSelect } from "../../components";
 import { crewAPI } from "../../services/CrewServer";
 import { CrewFormSchema } from "./CrewFormSchema";
 
-const CrewForm = () => {
+const CrewForm = ({ buttonText, defaultValues }) => {
   const [createCrewMember, {}] = crewAPI.useCreateCrewMemberMutation();
+  const [updateCrewMember, {}] = crewAPI.useUpdateCrewMemberMutation();
   const [open, setOpen] = useState(false);
-  const methods = useForm({ resolver: yupResolver(CrewFormSchema) });
+  const methods = useForm({
+    defaultValues,
+    resolver: yupResolver(CrewFormSchema),
+  });
 
   const {
     register,
@@ -32,19 +36,19 @@ const CrewForm = () => {
   const onSubmit = async (formData) => {
     console.log(formData, "formData");
     console.log("update");
-    await createCrewMember(formData);
+
     // if (!error) {
     //   console.log({ toUpdate });
-    //   if (toUpdate) {
-    //     dispatch(vacancyModifiy(formData, true));
-    //   } else {
-    //     dispatch(vacancyModifiy(formData));
-    //     reset();
-    //   }
+    if (defaultValues) {
+      await updateCrewMember(formData);
+    } else {
+      await createCrewMember(formData);
+      reset();
+    }
 
     //   setIsSuccess(true);
     // }
-    reset();
+    // reset();
     setOpen(false);
   };
 
@@ -60,7 +64,7 @@ const CrewForm = () => {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Add crew member
+        {buttonText}
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
@@ -120,7 +124,7 @@ const CrewForm = () => {
                   error={errors.popularity}
                   helperText={errors.popularity && errors.popularity.message}
                 />
-                <GenderSelect />
+                <GenderSelect defaultGender={defaultValues?.gender} />
                 {/* <Controller
                 control={control}
 

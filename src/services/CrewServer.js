@@ -32,5 +32,13 @@ export const crewAPI = createApi({
       }),
       invalidatesTags: ["Crew"],
     }),
+    updateCrewMember: build.mutation({
+      query: (crewMember) => ({
+        url: `/crew/${crewMember.id}`,
+        method: "PUT",
+        body: crewMember,
+      }),
+      invalidatesTags: ["Crew"],
+    }),
   }),
 });

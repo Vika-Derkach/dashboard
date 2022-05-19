@@ -26,7 +26,7 @@ const Crew = () => {
         }
         placeholder="to display..."
       />{" "}
-      <CrewForm />
+      <CrewForm buttonText="Add crew member" />
       {!isLoading && crew && (
         <>
           {crew.map((crewMember) => (

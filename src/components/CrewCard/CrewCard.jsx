@@ -6,6 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { CrewForm } from "../../containers";
 import { crewAPI } from "../../services/CrewServer";
 
 const CrewCard = ({ crewMember }) => {
@@ -41,6 +42,7 @@ const CrewCard = ({ crewMember }) => {
         <Button size="small" onClick={handleRemove}>
           Delete
         </Button>
+        <CrewForm defaultValues={crewMember} buttonText="Edit crew member" />
       </CardActions>
     </Card>
   );

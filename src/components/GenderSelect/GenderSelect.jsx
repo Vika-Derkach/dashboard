@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-const GenderSelect = () => {
+const GenderSelect = ({ defaultGender }) => {
   const {
     register,
     formState: { errors },
@@ -23,6 +23,7 @@ const GenderSelect = () => {
           id="demo-simple-select"
           {...register("gender")}
           error={errors.gender}
+          defaultValue={defaultGender || null}
         >
           <MenuItem value="1">Female</MenuItem>
           <MenuItem value="2">Male</MenuItem>
