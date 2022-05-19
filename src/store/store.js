@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import CitiesReducer from "../reducers/CitiesSlice";
 import VacanciesReducer from "../reducers/VacanciesSlice";
+import { crewAPI } from "../services/CrewServer";
 import { populationAPI } from "../services/PopulationServer";
 import { postAPI } from "../services/PostsService";
 import { stockAPI } from "../services/StockServer";
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   [postAPI.reducerPath]: postAPI.reducer,
   [stockAPI.reducerPath]: stockAPI.reducer,
   [populationAPI.reducerPath]: populationAPI.reducer,
+  [crewAPI.reducerPath]: crewAPI.reducer,
 });
 
 export const setupStore = () => {
@@ -24,7 +26,8 @@ export const setupStore = () => {
         userAPI.middleware,
         postAPI.middleware,
         stockAPI.middleware,
-        populationAPI.middleware
+        populationAPI.middleware,
+        crewAPI.middleware
       ),
   });
 };

@@ -1,3 +1,4 @@
+export * from "./Crew/Crew";
 export * from "./Home/Home";
 export * from "./Population/Population";
 export * from "./StockPage/StockPage";

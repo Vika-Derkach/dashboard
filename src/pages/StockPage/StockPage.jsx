@@ -1,10 +1,8 @@
 import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { StockContainer } from "../../containers/StockContainer/StockContainer";
+import { StockContainer } from "../../containers";
 
 function a11yProps(index) {
-  console.log(index);
-
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,

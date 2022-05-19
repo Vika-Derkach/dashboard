@@ -17,8 +17,6 @@ const UserPage = () => {
     () => users?.find((elem) => elem.id === +id),
     [users, id]
   );
-  console.log(users, "users");
-  console.log(user, "user");
 
   return (
     <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>

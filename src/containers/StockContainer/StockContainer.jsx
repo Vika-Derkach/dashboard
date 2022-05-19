@@ -45,8 +45,6 @@ const StockContainer = (props) => {
     }
   }, [data, currentPeriod]);
 
-  console.log(limitedData, "limitedData");
-
   const handleValues = () => {
     setCurrentPeriod(
       currentPeriod === period.monthes ? period.weeks : period.monthes

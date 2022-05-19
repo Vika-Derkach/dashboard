@@ -107,6 +107,14 @@ const Header = () => {
           >
             <Link to="/population">Population</Link>
           </Typography>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+          >
+            <Link to="/crew">Crew</Link>
+          </Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

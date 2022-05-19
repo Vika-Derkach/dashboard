@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import { ErrorBoundry, Header, Spinner } from "./components";
 import {
+  Crew,
   Home,
   Population,
   StockPage,
@@ -31,6 +32,7 @@ function App() {
             <Route path="/vacancy" component={Vacancy} />
             <Route path="/stocks" component={StockPage} />
             <Route path="/population" component={Population} />
+            <Route path="/crew" component={Crew} />
             <Route
               render={() => (
                 <div className="mistake-page">

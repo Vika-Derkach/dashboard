@@ -10,7 +10,7 @@ const VacancyUpdate = () => {
   const { isLoadeing, error, vacancies } = useSelector(
     (state) => state.VacanciesReducer
   );
-  console.log(vacancies);
+
   const vacancyToUbdate = useSelector((state) =>
     state.VacanciesReducer.vacancies.find((elem) => elem.id === id)
   );
@@ -20,7 +20,6 @@ const VacancyUpdate = () => {
     dispatch(fetchCities());
     dispatch(fetchVacancies());
   }, [dispatch]);
-  console.log(vacancies);
 
   return (
     <Container maxWidth="md">

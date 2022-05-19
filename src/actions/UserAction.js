@@ -7,7 +7,7 @@ export const fetchUsers = () => async (dispatch) => {
     const response = await axios.get(
       "https://jsonplaceholder.typicode.com/users"
     );
-    console.log(response);
+
     dispatch(usersSlice.actions.userFetchingSuccess(response.data));
   } catch (e) {
     console.error(e);
