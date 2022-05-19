@@ -71,11 +71,13 @@ const CrewForm = ({ buttonText, defaultValues }) => {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl>
-              <DialogTitle>Add a new member</DialogTitle>
+              <DialogTitle>
+                {defaultValues ? "Edit the member" : "Add a new member"}
+              </DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  To subscribe to this website, please enter your email address
-                  here. We will send updates occasionally.
+                  Every member of the crew is very important. We respect and
+                  love all them. To work in crew is a great pleasure.
                 </DialogContentText>
                 <TextField
                   autoFocus
@@ -114,6 +116,7 @@ const CrewForm = ({ buttonText, defaultValues }) => {
                   helperText={errors.department && errors.department.message}
                 />
                 <TextField
+                  sx={{ mb: 1.5 }}
                   autoFocus
                   margin="dense"
                   label="Popularity"

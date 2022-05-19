@@ -1,6 +1,6 @@
 import { Container, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { CrewCard, Spinner } from "../../components";
+import { CrewCard, ErrorIndicator, Spinner } from "../../components";
 import { CrewForm } from "../../containers";
 import { crewAPI } from "../../services/CrewServer";
 
@@ -35,6 +35,7 @@ const Crew = () => {
         </>
       )}
       {isLoading && <Spinner />}
+      {error && <ErrorIndicator />}
     </Container>
   );
 };
