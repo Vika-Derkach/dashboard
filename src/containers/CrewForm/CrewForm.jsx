@@ -5,12 +5,42 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { GenderSelect } from "../../components";
 
 const CrewForm = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    clearErrors,
+  } = useForm();
+
+  //   const  = methods;
+
+  const onSubmit = (formData) => {
+    console.log(formData, "formData");
+    console.log("update");
+
+    // if (!error) {
+    //   console.log({ toUpdate });
+    //   if (toUpdate) {
+    //     dispatch(vacancyModifiy(formData, true));
+    //   } else {
+    //     dispatch(vacancyModifiy(formData));
+    //     reset();
+    //   }
+
+    //   setIsSuccess(true);
+    // }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -25,27 +55,70 @@ const CrewForm = () => {
       <Button variant="outlined" onClick={handleClickOpen}>
         Open form dialog
       </Button>
+
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl>
+            <DialogTitle>Add a new member</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                To subscribe to this website, please enter your email address
+                here. We will send updates occasionally.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Name"
+                type="name"
+                fullWidth
+                variant="standard"
+                {...register("name")}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="job"
+                label="Job"
+                type="text"
+                fullWidth
+                variant="standard"
+                {...register("job")}
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Department"
+                type="text"
+                fullWidth
+                variant="standard"
+                {...register("department")}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Popularity"
+                type="number"
+                fullWidth
+                variant="standard"
+                {...register("popularity")}
+              />
+              <GenderSelect {...register("gender")} />
+              {/* <Controller
+                control={control}
+
+                render={({field: { onChange, value, name, ref }})}
+                // {...register("gender")}
+                // as={<GenderSelect />}
+              /> */}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button type="submit">Subscribe</Button>
+            </DialogActions>
+          </FormControl>
+        </form>
       </Dialog>
     </div>
   );

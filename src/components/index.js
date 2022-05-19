@@ -2,6 +2,7 @@ export * from "./AutocompleteCity/AutocompleteCity";
 export * from "./CrewCard/CrewCard";
 export * from "./error-boundry/error-boundry";
 export * from "./ErrorIndicator/ErrorIndicator";
+export * from "./GenderSelect/GenderSelect";
 export * from "./Header/Header";
 export * from "./PopulationChart/PopulationChart";
 export * from "./PostsTable/PostsTable";
