@@ -6,8 +6,15 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { crewAPI } from "../../services/CrewServer";
 
 const CrewCard = ({ crewMember }) => {
+  const [deleteCrewMember, {}] = crewAPI.useDeleteCrewMemberMutation();
+  const handleRemove = (event) => {
+    // event.stopPropagation();
+    deleteCrewMember(crewMember);
+  };
+
   return (
     <Card sx={{ minWidth: 275 }} variant="outlined">
       <CardContent>
@@ -31,7 +38,9 @@ const CrewCard = ({ crewMember }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button size="small" onClick={handleRemove}>
+          Delete
+        </Button>
       </CardActions>
     </Card>
   );

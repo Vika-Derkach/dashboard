@@ -24,5 +24,13 @@ export const crewAPI = createApi({
       }),
       invalidatesTags: ["Crew"],
     }),
+    deleteCrewMember: build.mutation({
+      query: (crewMember) => ({
+        url: `/crew/${crewMember.id}`,
+        method: "DELETE",
+        body: crewMember,
+      }),
+      invalidatesTags: ["Crew"],
+    }),
   }),
 });

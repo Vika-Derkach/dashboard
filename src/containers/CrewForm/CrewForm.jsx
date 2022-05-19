@@ -44,6 +44,8 @@ const CrewForm = () => {
 
     //   setIsSuccess(true);
     // }
+    reset();
+    setOpen(false);
   };
 
   const handleClickOpen = () => {
@@ -52,12 +54,13 @@ const CrewForm = () => {
 
   const handleClose = () => {
     setOpen(false);
+    clearErrors();
   };
 
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
+        Add crew member
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
