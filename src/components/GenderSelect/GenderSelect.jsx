@@ -1,13 +1,12 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import React, { forwardRef, useState } from "react";
+import React from "react";
+import { useFormContext } from "react-hook-form";
 
-const GenderSelect = forwardRef(({ control, ...props }, ref) => {
-  const [gender, setGender] = useState("");
-
-  const handleChange = (event) => {
-    setGender(event.target.value);
-  };
-  console.log(gender, "gender");
+const GenderSelect = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
@@ -15,11 +14,7 @@ const GenderSelect = forwardRef(({ control, ...props }, ref) => {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={gender}
-          label="Gender"
-          onChange={handleChange}
-          ref={ref}
-          control={control}
+          {...register("gender")}
         >
           <MenuItem value="1">Female</MenuItem>
           <MenuItem value="2">Male</MenuItem>
@@ -27,6 +22,6 @@ const GenderSelect = forwardRef(({ control, ...props }, ref) => {
       </FormControl>
     </Box>
   );
-});
+};
 
 export { GenderSelect };

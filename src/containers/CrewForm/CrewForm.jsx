@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
   Dialog,
@@ -9,11 +10,14 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { GenderSelect } from "../../components";
+import { CrewFormSchema } from "./CrewFormSchema";
 
 const CrewForm = () => {
   const [open, setOpen] = useState(false);
+  const methods = useForm({ resolver: yupResolver(CrewFormSchema) });
+
   const {
     register,
     control,
@@ -21,9 +25,7 @@ const CrewForm = () => {
     formState: { errors },
     reset,
     clearErrors,
-  } = useForm();
-
-  //   const  = methods;
+  } = methods;
 
   const onSubmit = (formData) => {
     console.log(formData, "formData");
@@ -57,68 +59,70 @@ const CrewForm = () => {
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl>
-            <DialogTitle>Add a new member</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                To subscribe to this website, please enter your email address
-                here. We will send updates occasionally.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Name"
-                type="name"
-                fullWidth
-                variant="standard"
-                {...register("name")}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="job"
-                label="Job"
-                type="text"
-                fullWidth
-                variant="standard"
-                {...register("job")}
-              />
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl>
+              <DialogTitle>Add a new member</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  To subscribe to this website, please enter your email address
+                  here. We will send updates occasionally.
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Name"
+                  type="name"
+                  fullWidth
+                  variant="standard"
+                  {...register("name")}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="job"
+                  label="Job"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  {...register("job")}
+                />
 
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Department"
-                type="text"
-                fullWidth
-                variant="standard"
-                {...register("department")}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Popularity"
-                type="number"
-                fullWidth
-                variant="standard"
-                {...register("popularity")}
-              />
-              <GenderSelect {...register("gender")} />
-              {/* <Controller
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Department"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  {...register("department")}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Popularity"
+                  type="number"
+                  fullWidth
+                  variant="standard"
+                  {...register("popularity")}
+                />
+                <GenderSelect />
+                {/* <Controller
                 control={control}
 
                 render={({field: { onChange, value, name, ref }})}
                 // {...register("gender")}
                 // as={<GenderSelect />}
               /> */}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button type="submit">Subscribe</Button>
-            </DialogActions>
-          </FormControl>
-        </form>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button type="submit">Subscribe</Button>
+              </DialogActions>
+            </FormControl>
+          </form>
+        </FormProvider>
       </Dialog>
     </div>
   );
