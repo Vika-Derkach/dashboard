@@ -12,9 +12,11 @@ import {
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { GenderSelect } from "../../components";
+import { crewAPI } from "../../services/CrewServer";
 import { CrewFormSchema } from "./CrewFormSchema";
 
 const CrewForm = () => {
+  const [createCrewMember, {}] = crewAPI.useCreateCrewMemberMutation();
   const [open, setOpen] = useState(false);
   const methods = useForm({ resolver: yupResolver(CrewFormSchema) });
 
@@ -27,10 +29,10 @@ const CrewForm = () => {
     clearErrors,
   } = methods;
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     console.log(formData, "formData");
     console.log("update");
-
+    await createCrewMember(formData);
     // if (!error) {
     //   console.log({ toUpdate });
     //   if (toUpdate) {
@@ -77,6 +79,8 @@ const CrewForm = () => {
                   fullWidth
                   variant="standard"
                   {...register("name")}
+                  error={errors.name}
+                  helperText={errors.name && errors.name.message}
                 />
                 <TextField
                   autoFocus
@@ -87,6 +91,8 @@ const CrewForm = () => {
                   fullWidth
                   variant="standard"
                   {...register("job")}
+                  error={errors.job}
+                  helperText={errors.job && errors.job.message}
                 />
 
                 <TextField
@@ -97,6 +103,8 @@ const CrewForm = () => {
                   fullWidth
                   variant="standard"
                   {...register("department")}
+                  error={errors.department}
+                  helperText={errors.department && errors.department.message}
                 />
                 <TextField
                   autoFocus
@@ -106,6 +114,8 @@ const CrewForm = () => {
                   fullWidth
                   variant="standard"
                   {...register("popularity")}
+                  error={errors.popularity}
+                  helperText={errors.popularity && errors.popularity.message}
                 />
                 <GenderSelect />
                 {/* <Controller

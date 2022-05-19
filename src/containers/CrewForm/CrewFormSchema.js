@@ -19,5 +19,5 @@ export const CrewFormSchema = yup.object().shape({
     .min(2, "Too short department")
     .max(100, "Must be shorted"),
   popularity: yup.string(),
-  gender: yup.string(),
+  gender: yup.string().required("Choose gender"),
 });

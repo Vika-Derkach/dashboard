@@ -26,6 +26,9 @@ const CrewCard = ({ crewMember }) => {
           {crewMember.job}
           {crewMember.popularity && <>, popularity: {crewMember.popularity}</>}
         </Typography>
+        <Typography sx={{ mt: 1.5 }} color="text.secondary">
+          Gender {crewMember.gender}
+        </Typography>
       </CardContent>
       <CardActions>
         <Button size="small">Learn More</Button>
