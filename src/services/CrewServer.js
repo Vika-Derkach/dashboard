@@ -8,11 +8,13 @@ export const crewAPI = createApi({
   tagTypes: ["Crew"],
   endpoints: (build) => ({
     fetchAllCrew: build.query({
-      query: ({ page, limit }) => ({
+      query: ({ page, limit, sort }) => ({
         url: `/crew`,
         params: {
           _page: page,
           _limit: limit,
+          _sort: sort,
+          _order: "asc",
           // perPage: 5
         },
       }),

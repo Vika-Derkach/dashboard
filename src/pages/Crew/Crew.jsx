@@ -1,14 +1,20 @@
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Button, Container, TextField } from "@mui/material";
+import { Button, ButtonGroup, Container, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { CrewCard, ErrorIndicator, Spinner } from "../../components";
 import { CrewForm } from "../../containers";
 import { crewAPI } from "../../services/CrewServer";
 
+const sortBy = {
+  id: "id",
+  name: "name",
+};
+
 const Crew = () => {
   const [limit, setLimit] = useState("5");
   const [page, setPage] = useState(1);
+  const [currentSort, setCurrentSort] = useState(sortBy.id);
   // const [noMoreResults, setNoMoreResults] = useState(false);
   const [users, setUsers] = useState([]);
 
@@ -17,7 +23,7 @@ const Crew = () => {
     error,
     isLoading,
     isFetching,
-  } = crewAPI.useFetchAllCrewQuery({ page, limit });
+  } = crewAPI.useFetchAllCrewQuery({ page, limit, sort: currentSort });
 
   // useEffect(() => {
   //   if (crew?.length) {
@@ -29,6 +35,9 @@ const Crew = () => {
   // console.log(users, "users");
 
   console.log(crew, "crew");
+  const handleSort = () => {
+    setCurrentSort(currentSort === sortBy.id ? sortBy.name : sortBy.id);
+  };
   return (
     <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>
       <TextField
@@ -46,6 +55,20 @@ const Crew = () => {
         placeholder="to display..."
       />{" "}
       <CrewForm buttonText="Add crew member" />
+      <ButtonGroup sx={{ m: 1.5 }}>
+        <Button
+          variant={currentSort === sortBy.id ? "contained" : "outlined"}
+          onClick={handleSort}
+        >
+          ID{" "}
+        </Button>
+        <Button
+          variant={currentSort === sortBy.name ? "contained" : "outlined"}
+          onClick={handleSort}
+        >
+          Name{" "}
+        </Button>
+      </ButtonGroup>
       {!isLoading && crew && (
         <>
           {crew.map((crewMember) => (
