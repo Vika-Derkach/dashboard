@@ -16,7 +16,7 @@ const Crew = () => {
         type="number"
         value={limit}
         onChange={(e) => setLimit(e.target.value)}
-        error={limit.includes("-") || limit.includes(".") ? true : false}
+        error={limit.includes("-") || limit.includes(".")}
         helperText={
           limit.includes("-")
             ? "Can't be negative"

@@ -12,8 +12,10 @@ import { useFormContext } from "react-hook-form";
 const GenderSelect = ({ defaultGender }) => {
   const {
     register,
+    reset,
     formState: { errors },
   } = useFormContext();
+
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
@@ -22,8 +24,8 @@ const GenderSelect = ({ defaultGender }) => {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           {...register("gender")}
-          error={errors.gender}
-          defaultValue={defaultGender || null}
+          error={!!errors.gender}
+          defaultValue={defaultGender ? defaultGender : ""}
         >
           <MenuItem value="1">Female</MenuItem>
           <MenuItem value="2">Male</MenuItem>

@@ -88,7 +88,7 @@ const CrewForm = ({ buttonText, defaultValues }) => {
                   fullWidth
                   variant="standard"
                   {...register("name")}
-                  error={errors.name}
+                  error={!!errors.name}
                   helperText={errors.name && errors.name.message}
                 />
                 <TextField
@@ -100,7 +100,7 @@ const CrewForm = ({ buttonText, defaultValues }) => {
                   fullWidth
                   variant="standard"
                   {...register("job")}
-                  error={errors.job}
+                  error={!!errors.job}
                   helperText={errors.job && errors.job.message}
                 />
 
@@ -112,7 +112,7 @@ const CrewForm = ({ buttonText, defaultValues }) => {
                   fullWidth
                   variant="standard"
                   {...register("department")}
-                  error={errors.department}
+                  error={!!errors.department}
                   helperText={errors.department && errors.department.message}
                 />
                 <TextField
@@ -124,7 +124,7 @@ const CrewForm = ({ buttonText, defaultValues }) => {
                   fullWidth
                   variant="standard"
                   {...register("popularity")}
-                  error={errors.popularity}
+                  error={!!errors.popularity}
                   helperText={errors.popularity && errors.popularity.message}
                 />
                 <GenderSelect defaultGender={defaultValues?.gender} />

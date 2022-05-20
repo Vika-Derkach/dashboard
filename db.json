@@ -98,15 +98,15 @@
       "job": "gdfg",
       "department": "fdgfdg",
       "popularity": "4",
-      "gender": "2",
+      "gender": "1",
       "id": 13
     },
     {
-      "name": "gfh",
-      "job": "hfg",
-      "department": "hfg",
+      "name": "cool",
+      "job": "be cool",
+      "department": "cooly",
       "popularity": "7655",
-      "gender": "1",
+      "gender": "2",
       "id": 14
     },
     {
@@ -124,6 +124,22 @@
       "popularity": "64",
       "gender": "2",
       "id": 16
+    },
+    {
+      "name": "Viktoriia",
+      "job": "cat",
+      "department": "catty",
+      "popularity": "1",
+      "gender": "2",
+      "id": 17
+    },
+    {
+      "name": "gdfg",
+      "job": "4fgdf",
+      "department": "gdfg",
+      "popularity": "4",
+      "gender": "2",
+      "id": 18
     }
   ],
   "comments": [],
