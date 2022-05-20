@@ -8,7 +8,7 @@ export const crewAPI = createApi({
   tagTypes: ["Crew"],
   endpoints: (build) => ({
     fetchAllCrew: build.query({
-      query: ({ page, limit, sort, popularityHigher }) => ({
+      query: ({ page, limit, sort, popularityHigher, job }) => ({
         url: `/crew`,
         params: {
           _page: page,
@@ -16,6 +16,7 @@ export const crewAPI = createApi({
           _sort: sort,
           _order: "asc",
           popularity_gte: popularityHigher,
+          job_like: job,
           // perPage: 5
         },
       }),

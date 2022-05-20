@@ -14,6 +14,7 @@ const sortBy = {
 const Crew = () => {
   const [limit, setLimit] = useState("5");
   const [popularity, setPopularity] = useState("");
+  const [job, setJob] = useState("");
   const [page, setPage] = useState(1);
   const [currentSort, setCurrentSort] = useState(sortBy.id);
   // const [noMoreResults, setNoMoreResults] = useState(false);
@@ -29,6 +30,7 @@ const Crew = () => {
     limit,
     sort: currentSort,
     popularityHigher: popularity,
+    job,
   });
 
   // useEffect(() => {
@@ -46,43 +48,62 @@ const Crew = () => {
   };
   return (
     <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>
-      <TextField
-        type="number"
-        value={limit}
-        onChange={(e) => setLimit(e.target.value)}
-        error={limit.includes("-") || limit.includes(".")}
-        helperText={
-          limit.includes("-")
-            ? "Can't be negative"
-            : " " && limit.includes(".")
-            ? "Can't be decimal"
-            : " "
-        }
-        placeholder="to display..."
-      />{" "}
       <CrewForm buttonText="Add crew member" />
-      <ButtonGroup sx={{ m: 1.5 }}>
-        <Button
-          variant={currentSort === sortBy.id ? "contained" : "outlined"}
-          onClick={handleSort}
-        >
-          ID{" "}
-        </Button>
-        <Button
-          variant={currentSort === sortBy.name ? "contained" : "outlined"}
-          onClick={handleSort}
-        >
-          Name{" "}
-        </Button>
-      </ButtonGroup>
-      <TextField
-        type="number"
-        value={popularity}
-        onChange={(e) => setPopularity(e.target.value)}
-        error={popularity.includes("-")}
-        label="Popularity higher than"
-        helperText={popularity.includes("-") ? "Can't be negative" : " "}
-      />
+      <Container
+        maxWidth="md"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pt: 1,
+        }}
+      >
+        <TextField
+          type="number"
+          value={limit}
+          onChange={(e) => setLimit(e.target.value)}
+          error={limit.includes("-") || limit.includes(".")}
+          label="Limit per page"
+          helperText={
+            limit.includes("-")
+              ? "Can't be negative"
+              : " " && limit.includes(".")
+              ? "Can't be decimal"
+              : " "
+          }
+          placeholder="to display..."
+        />{" "}
+        <ButtonGroup sx={{ m: 1.5 }}>
+          <Button
+            variant={currentSort === sortBy.id ? "contained" : "outlined"}
+            onClick={handleSort}
+          >
+            ID{" "}
+          </Button>
+          <Button
+            variant={currentSort === sortBy.name ? "contained" : "outlined"}
+            onClick={handleSort}
+          >
+            Name{" "}
+          </Button>
+        </ButtonGroup>
+        <TextField
+          type="number"
+          value={popularity}
+          onChange={(e) => setPopularity(e.target.value)}
+          error={popularity.includes("-")}
+          label="Popularity higher than"
+          helperText={popularity.includes("-") ? "Can't be negative" : " "}
+        />
+        <TextField
+          type="text"
+          value={job}
+          onChange={(e) => setJob(e.target.value)}
+          label="Search by job"
+          // helperText={job.includes("-") ? "Can't be negative" : " "}
+        />
+      </Container>
+
       {!isLoading && crew && (
         <>
           {crew.map((crewMember) => (
