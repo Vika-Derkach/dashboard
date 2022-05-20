@@ -13,6 +13,7 @@ const sortBy = {
 
 const Crew = () => {
   const [limit, setLimit] = useState("5");
+  const [popularity, setPopularity] = useState("");
   const [page, setPage] = useState(1);
   const [currentSort, setCurrentSort] = useState(sortBy.id);
   // const [noMoreResults, setNoMoreResults] = useState(false);
@@ -23,7 +24,12 @@ const Crew = () => {
     error,
     isLoading,
     isFetching,
-  } = crewAPI.useFetchAllCrewQuery({ page, limit, sort: currentSort });
+  } = crewAPI.useFetchAllCrewQuery({
+    page,
+    limit,
+    sort: currentSort,
+    popularityHigher: popularity,
+  });
 
   // useEffect(() => {
   //   if (crew?.length) {
@@ -69,6 +75,14 @@ const Crew = () => {
           Name{" "}
         </Button>
       </ButtonGroup>
+      <TextField
+        type="number"
+        value={popularity}
+        onChange={(e) => setPopularity(e.target.value)}
+        error={popularity.includes("-")}
+        label="Popularity higher than"
+        helperText={popularity.includes("-") ? "Can't be negative" : " "}
+      />
       {!isLoading && crew && (
         <>
           {crew.map((crewMember) => (
