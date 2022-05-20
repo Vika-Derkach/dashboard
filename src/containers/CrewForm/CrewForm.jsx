@@ -16,9 +16,11 @@ import { crewAPI } from "../../services/CrewServer";
 import { CrewFormSchema } from "./CrewFormSchema";
 
 const CrewForm = ({ buttonText, defaultValues }) => {
-  const [createCrewMember, {}] = crewAPI.useCreateCrewMemberMutation();
+  const [createCrewMember, { isSuccess }] =
+    crewAPI.useCreateCrewMemberMutation();
   const [updateCrewMember, {}] = crewAPI.useUpdateCrewMemberMutation();
   const [open, setOpen] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(CrewFormSchema),
@@ -51,6 +53,7 @@ const CrewForm = ({ buttonText, defaultValues }) => {
     // reset();
     setOpen(false);
   };
+  console.log(isSuccess, "isSuccess");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -60,12 +63,29 @@ const CrewForm = ({ buttonText, defaultValues }) => {
     setOpen(false);
     clearErrors();
   };
+  // const handleCloseAlert = () => {
+  //   setOpenAlert(false);
+  // };
 
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
         {buttonText}
       </Button>
+
+      {/* <Snackbar
+        open={openAlert && isSuccess}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          This is a success message!
+        </Alert>
+      </Snackbar> */}
 
       <Dialog open={open} onClose={handleClose}>
         <FormProvider {...methods}>

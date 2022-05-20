@@ -8,10 +8,12 @@ export const crewAPI = createApi({
   tagTypes: ["Crew"],
   endpoints: (build) => ({
     fetchAllCrew: build.query({
-      query: (limit) => ({
+      query: ({ page, limit }) => ({
         url: `/crew`,
         params: {
+          _page: page,
           _limit: limit,
+          // perPage: 5
         },
       }),
       providesTags: (result) => ["Crew"],
