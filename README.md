@@ -2,6 +2,7 @@
 // npx json-server --watch db.json --port 5000 
 server
 
+--port 4000 on mac
 
 # Getting Started with Create React App
 
